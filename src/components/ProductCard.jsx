@@ -1,34 +1,24 @@
-import { useCart } from '../context/useCart'
-import { useToast } from '../context/useToast'
 import Link from './Link'
 
 function ProductCard({ product }) {
-  const { addProduct, euro } = useCart()
-  const { notify } = useToast()
+  const price = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(product.price)
 
   return (
     <article className={`product-card ${!product.is_available ? 'is-disabled' : ''}`}>
-      <img src={product.image_url} alt="" />
-      <div className="product-card__body">
-        <span>{product.category || 'Bakery'}</span>
-        <h3>{product.name}</h3>
-        <p>{product.description}</p>
-        <strong>{euro.format(product.price)}</strong>
-      </div>
-      <div className="product-card__actions">
-        <Link className="btn secondary" to={`/prodotti/${product.slug}`}>Dettaglio</Link>
-        <button
-          className="btn"
-          type="button"
-          disabled={!product.is_available}
-          onClick={() => {
-            addProduct(product)
-            notify('success', `${product.name} aggiunto al carrello.`)
-          }}
-        >
-          {product.is_available ? 'Aggiungi' : 'Non disponibile'}
-        </button>
-      </div>
+      <Link
+        aria-label={`Apri dettaglio prodotto ${product.name}`}
+        className="product-card__link"
+        to={`/prodotti/${product.slug}`}
+      >
+        <img src={product.image_url} alt="" />
+        <div className="product-card__body">
+          <span>{product.category || 'Bakery'}</span>
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+          <strong>{price}</strong>
+          {!product.is_available && <em>Non disponibile</em>}
+        </div>
+      </Link>
     </article>
   )
 }

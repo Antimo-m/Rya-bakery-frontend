@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { createOrder } from '../api/client'
 import Link from '../components/Link'
-import { navigate } from '../components/navigation'
 import { useCart } from '../context/useCart'
+import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
 
 function CheckoutPage() {
@@ -10,7 +11,9 @@ function CheckoutPage() {
   const [tableNumber, setTableNumber] = useState('')
   const [notes, setNotes] = useState('')
   const [sending, setSending] = useState(false)
+  const navigate = useNavigate()
   const { cartItems, total, euro, clearCart } = useCart()
+  const { reportError } = useError()
   const { notify } = useToast()
 
   async function submitOrder(event) {
@@ -18,7 +21,7 @@ function CheckoutPage() {
 
     if (cartItems.length === 0) {
       notify('error', 'Aggiungi almeno un prodotto prima di inviare l ordine.')
-      navigate('/ordina')
+      navigate('/prodotti')
       return
     }
 
@@ -36,8 +39,9 @@ function CheckoutPage() {
       })
 
       clearCart()
-      navigate('/conferma-ordine', { order: data.order })
+      navigate('/conferma-ordine', { state: { order: data.order } })
     } catch (error) {
+      reportError(error.message || 'Ordine non inviato.', error.status)
       notify('error', error.message)
     } finally {
       setSending(false)

@@ -1,54 +1,55 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect } from 'react'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import CartPage from '../pages/CartPage'
 import CheckoutPage from '../pages/CheckoutPage'
 import ConfirmationPage from '../pages/ConfirmationPage'
-import ContactsPage from '../pages/ContactsPage'
+import InfoPage from '../pages/InfoPage'
 import HomePage from '../pages/HomePage'
+import NotFoundPage from '../pages/NotFoundPage'
 import ProductDetailPage from '../pages/ProductDetailPage'
 import ProductsPage from '../pages/ProductsPage'
 
-function AppRouter() {
-  const [location, setLocation] = useState({
-    pathname: window.location.pathname,
-    state: window.history.state || {},
-  })
-
-  useEffect(() => {
-    const onPopState = () => setLocation({
-      pathname: window.location.pathname,
-      state: window.history.state || {},
-    })
-
-    window.addEventListener('popstate', onPopState)
-    return () => window.removeEventListener('popstate', onPopState)
-  }, [])
+function PageTitle() {
+  const location = useLocation()
 
   useEffect(() => {
     const titles = {
       '/': 'Rya Bakery | Home',
-      '/ordina': 'Rya Bakery | Ordina',
-      '/prodotti': 'Rya Bakery | Ordina',
+      '/prodotti': 'Rya Bakery | Prodotti',
       '/carrello': 'Rya Bakery | Carrello',
       '/checkout': 'Rya Bakery | Checkout',
       '/conferma-ordine': 'Rya Bakery | Conferma ordine',
-      '/contatti': 'Rya Bakery | Contatti',
+      '/informazioni': 'Rya Bakery | Informazioni',
     }
 
-    document.title = titles[location.pathname] || 'Rya Bakery | Prodotto'
+    document.title = titles[location.pathname] || (
+      location.pathname.startsWith('/prodotti/')
+        ? 'Rya Bakery | Prodotto'
+        : 'Rya Bakery | Pagina non trovata'
+    )
   }, [location.pathname])
 
-  return useMemo(() => {
-    if (location.pathname === '/') return <HomePage />
-    if (location.pathname === '/ordina') return <ProductsPage />
-    if (location.pathname === '/prodotti') return <ProductsPage />
-    if (location.pathname.startsWith('/prodotti/')) return <ProductDetailPage slug={location.pathname.replace('/prodotti/', '')} />
-    if (location.pathname === '/carrello') return <CartPage />
-    if (location.pathname === '/checkout') return <CheckoutPage />
-    if (location.pathname === '/conferma-ordine') return <ConfirmationPage order={location.state?.order} />
-    if (location.pathname === '/contatti') return <ContactsPage />
+  return null
+}
 
-    return <HomePage />
-  }, [location])
+function AppRouter() {
+  return (
+    <>
+      <PageTitle />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ordina" element={<Navigate to="/prodotti" replace />} />
+        <Route path="/prodotti" element={<ProductsPage />} />
+        <Route path="/prodotti/:slug" element={<ProductDetailPage />} />
+        <Route path="/carrello" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/conferma-ordine" element={<ConfirmationPage />} />
+        <Route path="/contatti" element={<Navigate to="/informazioni" replace />} />
+        <Route path="/informazioni" element={<InfoPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </>
+  )
 }
 
 export default AppRouter

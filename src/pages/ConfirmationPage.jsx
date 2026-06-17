@@ -1,8 +1,12 @@
+import { useLocation } from 'react-router-dom'
 import Link from '../components/Link'
 
 const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
 
-function ConfirmationPage({ order }) {
+function ConfirmationPage() {
+  const { state } = useLocation()
+  const order = state?.order
+
   return (
     <main className="page confirmation-page">
       <section className="confirmation-card">
@@ -19,7 +23,7 @@ function ConfirmationPage({ order }) {
           </dl>
         )}
 
-        <Link className="btn" to="/ordina">Nuovo ordine</Link>
+        <Link className="btn" to="/prodotti">Nuovo ordine</Link>
       </section>
     </main>
   )

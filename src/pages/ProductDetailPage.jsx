@@ -1,31 +1,51 @@
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { getProduct } from '../api/client'
 import Link from '../components/Link'
 import { useCart } from '../context/useCart'
+import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
 
-function ProductDetailPage({ slug }) {
+function ProductDetailPage() {
+  const { slug } = useParams()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
   const { addProduct, euro } = useCart()
+  const { reportError } = useError()
   const { notify } = useToast()
 
   useEffect(() => {
     getProduct(slug)
-      .then((data) => setProduct(data.product))
-      .catch((error) => notify('error', error.message || 'Prodotto non disponibile.'))
+      .then((data) => {
+        setProduct(data.product)
+        setNotFound(false)
+      })
+      .catch((error) => {
+        if (error.status === 404) {
+          setNotFound(true)
+          setProduct(null)
+          reportError('Prodotto non trovato.', 404)
+          return
+        }
+
+        reportError(error.message || 'Prodotto non disponibile.', error.status)
+        notify('error', 'Prodotto temporaneamente non disponibile.')
+      })
       .finally(() => setLoading(false))
-  }, [notify, slug])
+  }, [notify, reportError, slug])
 
   if (loading) {
     return <main className="page"><p className="empty-state">Caricamento prodotto...</p></main>
   }
 
-  if (!product) {
+  if (notFound || !product) {
     return (
-      <main className="page">
+      <main className="page error-page">
+        <p className="eyebrow">Prodotto non disponibile</p>
+        <h1>Non abbiamo trovato questo prodotto</h1>
         <p className="empty-state">Prodotto non trovato.</p>
-        <Link className="btn secondary" to="/ordina">Torna al catalogo</Link>
+        <Link className="btn secondary" to="/prodotti">Torna ai prodotti</Link>
       </main>
     )
   }
@@ -51,7 +71,7 @@ function ProductDetailPage({ slug }) {
             >
               {product.is_available ? 'Aggiungi al carrello' : 'Non disponibile'}
             </button>
-            <Link className="btn secondary" to="/ordina">Torna ai prodotti</Link>
+            <Link className="btn secondary" to="/prodotti">Torna ai prodotti</Link>
           </div>
         </div>
       </article>

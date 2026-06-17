@@ -1,17 +1,15 @@
-import { navigate } from './navigation'
+import { Link as RouterLink } from 'react-router-dom'
 
-function Link({ to, state, children, className }) {
+function Link({ to, state, children, className, ...props }) {
   return (
-    <a
+    <RouterLink
       className={className}
-      href={to}
-      onClick={(event) => {
-        event.preventDefault()
-        navigate(to, state)
-      }}
+      state={state}
+      to={to}
+      {...props}
     >
       {children}
-    </a>
+    </RouterLink>
   )
 }
 
