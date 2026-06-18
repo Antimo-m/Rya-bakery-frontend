@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { CartContext } from './cart-context'
 const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
+const MAX_PRODUCT_QUANTITY = 20
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState({})
@@ -12,7 +13,7 @@ export function CartProvider({ children }) {
       ...current,
       [product.slug]: {
         product,
-        quantity: (current[product.slug]?.quantity || 0) + quantity,
+        quantity: Math.min(MAX_PRODUCT_QUANTITY, (current[product.slug]?.quantity || 0) + quantity),
       },
     }))
   }
@@ -26,7 +27,7 @@ export function CartProvider({ children }) {
       if (!Number.isFinite(normalizedQuantity) || normalizedQuantity < 1) {
         delete next[slug]
       } else if (next[slug]) {
-        next[slug] = { ...next[slug], quantity: Math.floor(normalizedQuantity) }
+        next[slug] = { ...next[slug], quantity: Math.min(MAX_PRODUCT_QUANTITY, Math.floor(normalizedQuantity)) }
       }
 
       return next
@@ -54,7 +55,7 @@ export function CartProvider({ children }) {
   const count = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ cartItems, count, total, euro, addProduct, setQuantity, removeProduct, clearCart }}>
+    <CartContext.Provider value={{ cartItems, count, total, euro, maxProductQuantity: MAX_PRODUCT_QUANTITY, addProduct, setQuantity, removeProduct, clearCart }}>
       {children}
     </CartContext.Provider>
   )

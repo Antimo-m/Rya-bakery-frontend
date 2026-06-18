@@ -3,7 +3,7 @@ import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 
 function CartPage() {
-  const { cartItems, total, euro, removeProduct, setQuantity } = useCart()
+  const { cartItems, total, euro, maxProductQuantity, removeProduct, setQuantity } = useCart()
   const titleRef = useRef(null)
 
   useEffect(() => {
@@ -56,6 +56,7 @@ function CartPage() {
                     aria-label={`Quantita ${item.product.name}`}
                     inputMode="numeric"
                     min="1"
+                    max={maxProductQuantity}
                     type="number"
                     value={item.quantity}
                     onChange={(event) => {
@@ -67,6 +68,7 @@ function CartPage() {
                   <button
                     aria-label={`Aumenta quantita di ${item.product.name}`}
                     type="button"
+                    disabled={item.quantity >= maxProductQuantity}
                     onClick={() => setQuantity(item.product.slug, item.quantity + 1)}
                   >
                     ›
