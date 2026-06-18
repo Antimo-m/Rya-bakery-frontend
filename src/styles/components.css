@@ -11,7 +11,7 @@
   font-weight: 900;
   text-decoration: none;
   cursor: pointer;
-  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+  transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), background-color .18s var(--ease-out);
 }
 
 .btn:hover {
@@ -99,13 +99,28 @@
   border-radius: 18px;
   background: linear-gradient(180deg, #fffaf2, #f5eadb);
   box-shadow: var(--soft-shadow);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  isolation: isolate;
+  transition: transform .22s var(--ease-out), box-shadow .22s var(--ease-out), border-color .22s var(--ease-out);
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
   border-color: rgba(15, 107, 88, .24);
   box-shadow: 0 26px 70px rgba(58, 37, 29, .16);
+}
+
+.product-card::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background: linear-gradient(135deg, rgba(15, 107, 88, .12), transparent 42%);
+  opacity: 0;
+  transition: opacity .22s var(--ease-out);
+}
+
+.product-card:hover::after {
+  opacity: 1;
 }
 
 .product-card.is-disabled {
@@ -131,6 +146,56 @@
   background: #eadacb;
 }
 
+.product-card--skeleton {
+  display: grid;
+  gap: 14px;
+  min-height: 328px;
+  padding: 0 0 16px;
+}
+
+.product-card--skeleton span,
+.product-card--skeleton i {
+  display: block;
+  overflow: hidden;
+  background: linear-gradient(90deg, #eadfce 0%, #fff7ec 48%, #eadfce 100%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.2s linear infinite;
+}
+
+.product-card--skeleton span {
+  width: 100%;
+  aspect-ratio: 16 / 11;
+}
+
+.product-card--skeleton div {
+  display: grid;
+  gap: 10px;
+  padding: 0 15px;
+}
+
+.product-card--skeleton i {
+  height: 14px;
+  border-radius: 999px;
+}
+
+.product-card--skeleton i:nth-child(1) {
+  width: 44%;
+}
+
+.product-card--skeleton i:nth-child(2) {
+  width: 82%;
+}
+
+.product-card--skeleton i:nth-child(3) {
+  width: 58%;
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
 .product-card__body span {
   width: fit-content;
   padding: 5px 9px;
@@ -145,7 +210,7 @@
 .product-card__body {
   display: grid;
   gap: 8px;
-  padding: 15px;
+  padding: 15px 15px 8px;
 }
 
 .product-card__body h3 {
@@ -180,11 +245,76 @@
   font-weight: 900;
 }
 
+.product-card__actions {
+  padding: 0 15px 15px;
+}
+
+.product-card__cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(15, 107, 88, .18);
+  border-radius: 999px;
+  color: var(--emerald);
+  background: rgba(15, 107, 88, .08);
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.product-card__cart span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--emerald);
+}
+
+.quantity-control.compact {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  gap: 8px;
+}
+
+.quantity-control.compact button,
+.quantity-control.compact input {
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--espresso);
+  background: #fffaf2;
+  text-align: center;
+  font-weight: 950;
+}
+
+.catalog-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 16px;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.catalog-meta strong {
+  padding: 7px 10px;
+  border: 1px solid rgba(124, 74, 47, .14);
+  border-radius: 999px;
+  color: var(--emerald);
+  background: rgba(15, 107, 88, .08);
+}
+
 .pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
   margin-top: 24px;
 }
 
@@ -211,8 +341,14 @@
 }
 
 .pagination span {
+  min-width: 76px;
+  padding: 9px 14px;
+  border: 1px solid rgba(124, 74, 47, .14);
+  border-radius: 999px;
   color: var(--muted);
-  font-weight: 850;
+  background: rgba(255, 250, 242, .86);
+  font-weight: 900;
+  text-align: center;
 }
 
 .empty-state,

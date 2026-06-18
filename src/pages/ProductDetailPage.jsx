@@ -62,7 +62,7 @@ function ProductDetailPage() {
   return (
     <main className="page">
       <article className="product-detail">
-        <img src={product.image_url} alt="" />
+        <img src={product.image_url} alt="" loading="lazy" />
         <div>
           <p className="eyebrow">{product.category}</p>
           <h1>{product.name}</h1>

@@ -1,5 +1,5 @@
 .hero-page {
-  min-height: calc(88vh - 78px);
+  min-height: calc(86vh - 78px);
   display: flex;
   align-items: flex-end;
   padding: clamp(28px, 6vw, 60px);
@@ -28,6 +28,69 @@
 
 .hero-page .eyebrow {
   color: #ffd9aa;
+}
+
+.orders-list {
+  display: grid;
+  gap: 16px;
+}
+
+.order-card,
+.privacy-panel {
+  border: 1px solid rgba(124, 74, 47, .14);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 250, 242, .86);
+  box-shadow: var(--soft-shadow);
+}
+
+.order-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.order-card h2,
+.order-card p {
+  margin: 0;
+}
+
+.order-card ul {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-card li,
+.order-card footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.order-card footer {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.order-status {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--emerald);
+  background: rgba(15, 107, 88, .1);
+  font-size: 12px;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.privacy-panel {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
 }
 
 .visual-showcase {
@@ -78,6 +141,19 @@
   font-weight: 950;
 }
 
+.showcase-tabs button,
+.carousel-arrow,
+.category-tabs button,
+.pagination button {
+  transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), background-color .18s var(--ease-out), color .18s var(--ease-out);
+}
+
+.showcase-tabs button:hover,
+.category-tabs button:hover,
+.pagination button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
 .showcase-tabs button.active {
   color: #fffaf2;
   background: var(--emerald);
@@ -99,7 +175,11 @@
   min-height: 430px;
   object-fit: cover;
   filter: saturate(1.05) contrast(1.02);
-  transition: opacity .35s ease, transform .35s ease;
+  transition: opacity .35s var(--ease-out), transform .35s var(--ease-out);
+}
+
+.showcase-stage:hover img {
+  transform: scale(1.025);
 }
 
 .showcase-stage::after {
@@ -186,7 +266,7 @@
   background: linear-gradient(180deg, #fffaf2, #f1e3d1);
   text-decoration: none;
   box-shadow: var(--soft-shadow);
-  transition: transform .18s ease, box-shadow .18s ease;
+  transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out);
 }
 
 .digital-slide:hover {
@@ -233,7 +313,7 @@
   color: var(--espresso);
   background: rgba(255, 250, 242, .96);
   box-shadow: 0 16px 36px rgba(58, 37, 29, .13);
-  transition: transform .18s ease, background-color .18s ease, color .18s ease;
+  transition: transform .18s var(--ease-out), background-color .18s var(--ease-out), color .18s var(--ease-out);
 }
 
 .carousel-arrow:hover {

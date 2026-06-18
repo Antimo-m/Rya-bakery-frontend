@@ -5,7 +5,7 @@ import logo from '../assets/rya-logo.svg'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
-import { isOpenNow } from '../data/brand'
+import { isOpenNow, openingHours, socialLinks } from '../data/brand'
 
 function SiteLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -86,6 +86,34 @@ function SiteLayout({ children }) {
       {toast && <div className={`toast ${toast.type}`}>{toast.text}</div>}
 
       {children}
+
+      <footer className="site-footer">
+        <div className="site-footer__brand">
+          <RouterLink className="brand-link" to="/">
+            <img src={logo} alt="" />
+            <span>
+              <strong>Rya Bakery</strong>
+              <small>Bakery & Cafe</small>
+            </span>
+          </RouterLink>
+          <p>Bakery digitale per colazioni, pausa pranzo e ordini al tavolo in Via Timavo.</p>
+        </div>
+        <nav aria-label="Link utili footer">
+          <RouterLink to="/prodotti">Prodotti</RouterLink>
+          <RouterLink to="/ordini">I tuoi ordini</RouterLink>
+          <RouterLink to="/informazioni">Informazioni</RouterLink>
+          <RouterLink to="/privacy">Privacy policy</RouterLink>
+        </nav>
+        <div>
+          <span>Via Timavo 59, Genova</span>
+          <strong>{openingHours[0].hours}</strong>
+          <div className="site-footer__socials">
+            {socialLinks.map((social) => (
+              <span key={social.label}>{social.label}</span>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

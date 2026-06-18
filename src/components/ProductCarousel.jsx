@@ -31,7 +31,7 @@ function ProductCarousel({ products, euro }) {
         {products.map((product) => (
           <SwiperSlide key={product.slug}>
             <Link className="digital-slide" to={`/prodotti/${product.slug}`}>
-              <img src={product.image_url} alt="" />
+              <img src={product.image_url} alt="" loading="lazy" />
               <span>{product.category || 'Bakery'}</span>
               <strong>{product.name}</strong>
               <small>{euro.format(product.price)}</small>

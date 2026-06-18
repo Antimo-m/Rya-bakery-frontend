@@ -9,6 +9,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 import OrdersPage from '../pages/OrdersPage'
 import ProductDetailPage from '../pages/ProductDetailPage'
 import ProductsPage from '../pages/ProductsPage'
+import PrivacyPage from '../pages/PrivacyPage'
 
 function PageTitle() {
   const location = useLocation()
@@ -22,6 +23,7 @@ function PageTitle() {
       '/checkout': 'Rya Bakery | Checkout',
       '/conferma-ordine': 'Rya Bakery | Conferma ordine',
       '/informazioni': 'Rya Bakery | Informazioni',
+      '/privacy': 'Rya Bakery | Privacy',
     }
 
     document.title = titles[location.pathname] || (
@@ -49,6 +51,7 @@ function AppRouter() {
         <Route path="/conferma-ordine" element={<ConfirmationPage />} />
         <Route path="/contatti" element={<Navigate to="/informazioni" replace />} />
         <Route path="/informazioni" element={<InfoPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>

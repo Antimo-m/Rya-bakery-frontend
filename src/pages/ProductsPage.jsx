@@ -4,6 +4,7 @@ import ProductCard from '../components/ProductCard'
 import { fallbackProducts } from '../data/fallbackProducts'
 
 const PER_PAGE = 10
+const SKELETON_CARDS = Array.from({ length: 6 }, (_, index) => index)
 
 function ProductsPage() {
   const [products, setProducts] = useState([])
@@ -70,11 +71,26 @@ function ProductsPage() {
       </div>
 
       {loading ? (
-        <p className="empty-state">Caricamento prodotti...</p>
+        <section className="product-grid" aria-label="Caricamento catalogo">
+          {SKELETON_CARDS.map((item) => (
+            <article className="product-card product-card--skeleton" key={item}>
+              <span></span>
+              <div>
+                <i></i>
+                <i></i>
+                <i></i>
+              </div>
+            </article>
+          ))}
+        </section>
       ) : currentProducts.length === 0 ? (
         <p className="empty-state">Nessun prodotto disponibile in questa selezione.</p>
       ) : (
         <>
+          <div className="catalog-meta">
+            <span>{totalProducts} prodotti disponibili</span>
+            <strong>Pagina {page} / {totalPages}</strong>
+          </div>
           <section className="product-grid" aria-label="Catalogo prodotti">
             {currentProducts.map((product) => <ProductCard key={product.slug} product={product} />)}
           </section>
@@ -89,7 +105,7 @@ function ProductsPage() {
             >
               ‹
             </button>
-            <span>Pagina {page} di {totalPages}</span>
+            <span>{page} / {totalPages}</span>
             <button
               aria-label="Pagina successiva"
               className="pagination__arrow"
