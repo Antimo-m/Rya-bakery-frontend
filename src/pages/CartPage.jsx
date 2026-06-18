@@ -3,7 +3,7 @@ import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 
 function CartPage() {
-  const { cartItems, total, euro, setQuantity } = useCart()
+  const { cartItems, total, euro, removeProduct, setQuantity } = useCart()
   const titleRef = useRef(null)
 
   useEffect(() => {
@@ -30,9 +30,19 @@ function CartPage() {
           <div className="cart-list">
             {cartItems.map((item) => (
               <article className="cart-line" key={item.product.slug}>
-                <div>
-                  <h2>{item.product.name}</h2>
-                  <span>{item.quantity} x {euro.format(item.product.price)}</span>
+                <img className="cart-line__image" src={item.product.image_url} alt="" />
+                <div className="cart-line__content">
+                  <div>
+                    <h2>{item.product.name}</h2>
+                    <span>{euro.format(item.product.price)} cad.</span>
+                  </div>
+                  <button
+                    className="cart-remove"
+                    type="button"
+                    onClick={() => removeProduct(item.product.slug)}
+                  >
+                    Rimuovi
+                  </button>
                 </div>
                 <div className="quantity-control">
                   <button
@@ -40,15 +50,26 @@ function CartPage() {
                     type="button"
                     onClick={() => setQuantity(item.product.slug, item.quantity - 1)}
                   >
-                    -
+                    ‹
                   </button>
-                  <strong aria-live="polite">{item.quantity}</strong>
+                  <input
+                    aria-label={`Quantita ${item.product.name}`}
+                    inputMode="numeric"
+                    min="1"
+                    type="number"
+                    value={item.quantity}
+                    onChange={(event) => {
+                      if (event.target.value !== '') {
+                        setQuantity(item.product.slug, event.target.value)
+                      }
+                    }}
+                  />
                   <button
                     aria-label={`Aumenta quantita di ${item.product.name}`}
                     type="button"
                     onClick={() => setQuantity(item.product.slug, item.quantity + 1)}
                   >
-                    +
+                    ›
                   </button>
                 </div>
                 <strong className="cart-line__total">{euro.format(item.lineTotal)}</strong>

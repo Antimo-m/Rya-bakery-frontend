@@ -18,15 +18,25 @@ export function CartProvider({ children }) {
   }
 
   function setQuantity(slug, quantity) {
+    const normalizedQuantity = Number(quantity)
+
     setItems((current) => {
       const next = { ...current }
 
-      if (quantity < 1) {
+      if (!Number.isFinite(normalizedQuantity) || normalizedQuantity < 1) {
         delete next[slug]
       } else if (next[slug]) {
-        next[slug] = { ...next[slug], quantity }
+        next[slug] = { ...next[slug], quantity: Math.floor(normalizedQuantity) }
       }
 
+      return next
+    })
+  }
+
+  function removeProduct(slug) {
+    setItems((current) => {
+      const next = { ...current }
+      delete next[slug]
       return next
     })
   }
@@ -44,7 +54,7 @@ export function CartProvider({ children }) {
   const count = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ cartItems, count, total, euro, addProduct, setQuantity, clearCart }}>
+    <CartContext.Provider value={{ cartItems, count, total, euro, addProduct, setQuantity, removeProduct, clearCart }}>
       {children}
     </CartContext.Provider>
   )

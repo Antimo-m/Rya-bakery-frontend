@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getProducts } from '../api/client'
 import ProductCard from '../components/ProductCard'
-import { useError } from '../context/useError'
-import { useToast } from '../context/useToast'
+import { fallbackProducts } from '../data/fallbackProducts'
 
 const PER_PAGE = 10
 
@@ -13,8 +12,6 @@ function ProductsPage() {
   const [page, setPage] = useState(1)
   const [serverMeta, setServerMeta] = useState(null)
   const [loading, setLoading] = useState(true)
-  const { reportError } = useError()
-  const { notify } = useToast()
 
   useEffect(() => {
     getProducts({
@@ -27,12 +24,13 @@ function ProductsPage() {
         setCategories(['Tutto', ...(data.categories || [])])
         setServerMeta(data.meta || null)
       })
-      .catch((error) => {
-        reportError(error.message || 'Catalogo non disponibile.', error.status)
-        notify('error', 'Catalogo temporaneamente non disponibile.')
+      .catch(() => {
+        setProducts(fallbackProducts)
+        setCategories(['Tutto', ...new Set(fallbackProducts.map((product) => product.category))])
+        setServerMeta(null)
       })
       .finally(() => setLoading(false))
-  }, [category, notify, page, reportError])
+  }, [category, page])
 
   const filteredProducts = useMemo(() => (
     category === 'Tutto' ? products : products.filter((product) => product.category === category)
@@ -83,19 +81,23 @@ function ProductsPage() {
 
           <nav className="pagination" aria-label="Paginazione prodotti">
             <button
+              aria-label="Pagina precedente"
+              className="pagination__arrow"
               type="button"
               disabled={page <= 1}
               onClick={() => setPage((current) => Math.max(1, current - 1))}
             >
-              Indietro
+              ‹
             </button>
             <span>Pagina {page} di {totalPages}</span>
             <button
+              aria-label="Pagina successiva"
+              className="pagination__arrow"
               type="button"
               disabled={page >= totalPages}
               onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
             >
-              Avanti
+              ›
             </button>
           </nav>
         </>

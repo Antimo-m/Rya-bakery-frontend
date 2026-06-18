@@ -5,6 +5,7 @@ import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
+import { fallbackProducts } from '../data/fallbackProducts'
 
 function ProductDetailPage() {
   const { slug } = useParams()
@@ -26,6 +27,14 @@ function ProductDetailPage() {
           setNotFound(true)
           setProduct(null)
           reportError('Prodotto non trovato.', 404)
+          return
+        }
+
+        const fallbackProduct = fallbackProducts.find((item) => item.slug === slug)
+
+        if (fallbackProduct) {
+          setProduct(fallbackProduct)
+          setNotFound(false)
           return
         }
 

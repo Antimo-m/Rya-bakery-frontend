@@ -2,19 +2,32 @@ import { useEffect, useState } from 'react'
 import { getProducts } from '../api/client'
 import Link from '../components/Link'
 import ProductCarousel from '../components/ProductCarousel'
-import { useError } from '../context/useError'
 import { useCart } from '../context/useCart'
+import { showcaseItems } from '../data/brand'
+import { fallbackProducts } from '../data/fallbackProducts'
 
 function HomePage() {
   const [products, setProducts] = useState([])
+  const [activeShowcase, setActiveShowcase] = useState(0)
   const { euro } = useCart()
-  const { reportError } = useError()
 
   useEffect(() => {
     getProducts({ page: 1, per_page: 10 })
       .then((data) => setProducts((data.products || []).slice(0, 10)))
-      .catch((error) => reportError(error.message || 'Prodotti non disponibili.', error.status))
-  }, [reportError])
+      .catch(() => {
+        setProducts(fallbackProducts)
+      })
+  }, [])
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveShowcase((current) => (current + 1) % showcaseItems.length)
+    }, 5000)
+
+    return () => window.clearInterval(interval)
+  }, [])
+
+  const featured = showcaseItems[activeShowcase]
 
   return (
     <main>
@@ -30,16 +43,33 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="live-local">
-        <div>
-          <p className="eyebrow">Ordine al tavolo</p>
-          <h2>Pausa semplice, prodotti sempre a portata.</h2>
-          <p>Scegli colazione, bakery e salato dal telefono. Lo staff riceve tutto nel gestionale e prepara l ordine.</p>
+      <section className="visual-showcase" aria-labelledby="showcase-title">
+        <div className="showcase-copy">
+          <p className="eyebrow">Bakery & Cafe</p>
+          <h2 id="showcase-title">Un banco caldo, digitale, curato nei dettagli.</h2>
+          <p>Una selezione che alterna dolce, salato e caffetteria con un ritmo visivo pensato per far respirare il brand.</p>
+          <div className="showcase-tabs" aria-label="Prodotti in evidenza">
+            {showcaseItems.map((item, index) => (
+              <button
+                aria-label={`Mostra ${item.title}`}
+                aria-pressed={activeShowcase === index}
+                className={activeShowcase === index ? 'active' : ''}
+                key={item.title}
+                type="button"
+                onClick={() => setActiveShowcase(index)}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="live-cards">
-          <article><span>Tempo medio</span><strong>5-8 min</strong></article>
-          <article><span>Servizio</span><strong>Al tavolo</strong></article>
-          <article><span>Catalogo</span><strong>Live</strong></article>
+        <div className="showcase-stage">
+          <img src={featured.image} alt="" />
+          <article>
+            <span>In evidenza</span>
+            <strong>{featured.title}</strong>
+            <p>{featured.subtitle}</p>
+          </article>
         </div>
       </section>
 
@@ -49,9 +79,11 @@ function HomePage() {
             <p className="eyebrow">Il banco digitale</p>
             <h2 id="digital-counter-title">Scorri i prodotti piu richiesti.</h2>
           </div>
-          <Link className="btn secondary" to="/prodotti">Vai ai prodotti</Link>
         </div>
         <ProductCarousel products={products} euro={euro} />
+        <div className="carousel-cta">
+          <Link className="btn btn-pill" to="/prodotti">Vai ai prodotti</Link>
+        </div>
       </section>
     </main>
   )

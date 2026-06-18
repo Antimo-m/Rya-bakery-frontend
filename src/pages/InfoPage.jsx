@@ -1,17 +1,15 @@
-import { divIcon } from 'leaflet'
-import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 import { FaFacebookF, FaInstagram, FaPhoneAlt, FaTiktok } from 'react-icons/fa'
-import { MdEmail, MdPlace } from 'react-icons/md'
-
-const position = [44.4103, 8.9576]
-const markerIcon = divIcon({
-  className: 'map-pin',
-  html: '<span></span>',
-  iconSize: [28, 28],
-  iconAnchor: [14, 14],
-})
+import { MdAccessTime, MdEmail, MdPlace } from 'react-icons/md'
+import { isOpenNow, openingHours, socialLinks } from '../data/brand'
 
 function InfoPage() {
+  const open = isOpenNow()
+  const iconBySocial = {
+    Instagram: <FaInstagram aria-hidden="true" />,
+    Facebook: <FaFacebookF aria-hidden="true" />,
+    TikTok: <FaTiktok aria-hidden="true" />,
+  }
+
   return (
     <main className="page">
       <section className="contacts-page">
@@ -25,13 +23,20 @@ function InfoPage() {
 
         <div className="info-layout">
           <div className="map-panel" aria-label="Mappa posizione Rya Bakery">
-            <MapContainer center={position} scrollWheelZoom={false} zoom={15}>
-              <TileLayer
-                attribution="&copy; OpenStreetMap contributors"
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <Marker icon={markerIcon} position={position} />
-            </MapContainer>
+            <div className="custom-map">
+              <span className="map-road map-road-a"></span>
+              <span className="map-road map-road-b"></span>
+              <span className="map-road map-road-c"></span>
+              <span className="map-block map-block-a"></span>
+              <span className="map-block map-block-b"></span>
+              <span className="map-block map-block-c"></span>
+              <div className="map-card">
+                <span className={`map-status ${open ? 'is-open' : 'is-closed'}`}>{open ? 'Aperto ora' : 'Chiuso ora'}</span>
+                <strong>Rya Bakery & Cafe</strong>
+                <small>Via Timavo, Genova</small>
+              </div>
+              <span className="map-pin"><i></i></span>
+            </div>
           </div>
 
           <div className="info-details">
@@ -39,7 +44,7 @@ function InfoPage() {
               <MdPlace aria-hidden="true" />
               <div>
                 <span>Indirizzo</span>
-                <strong>Via Timavo, Genova</strong>
+                <strong>Via Timavo 59, Genova</strong>
                 <p>Comodo per una pausa veloce o un ordine al banco.</p>
               </div>
             </article>
@@ -47,7 +52,7 @@ function InfoPage() {
               <FaPhoneAlt aria-hidden="true" />
               <div>
                 <span>Telefono</span>
-                <strong><a href="tel:+390101234567">010 123 4567</a></strong>
+                <strong><a href="tel:+393475776266"> 347 577 6266</a></strong>
                 <p>Per informazioni su disponibilita e ordini speciali.</p>
               </div>
             </article>
@@ -59,19 +64,51 @@ function InfoPage() {
                 <p>Rispondiamo appena il banco rallenta un attimo.</p>
               </div>
             </article>
+            <article>
+              <MdAccessTime aria-hidden="true" />
+              <div>
+                <span>Orari</span>
+                <strong>{open ? 'Aperto ora' : 'Chiuso ora'}</strong>
+                <p>Orari configurabili in sviluppo, in attesa di fonte ufficiale verificata.</p>
+              </div>
+            </article>
           </div>
         </div>
 
+        <section className="hours-panel" aria-label="Orari di apertura">
+          {openingHours.map((item) => (
+            <div key={item.day}>
+              <span>{item.day}</span>
+              <strong>{item.hours}</strong>
+            </div>
+          ))}
+        </section>
+
         <div className="social-links" aria-label="Social Rya Bakery">
-          <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram Rya Bakery">
-            <FaInstagram aria-hidden="true" />
-          </a>
-          <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook Rya Bakery">
-            <FaFacebookF aria-hidden="true" />
-          </a>
-          <a href="https://www.tiktok.com/" target="_blank" rel="noreferrer" aria-label="TikTok Rya Bakery">
-            <FaTiktok aria-hidden="true" />
-          </a>
+          {socialLinks.map((social) => (
+            social.verified ? (
+              <a
+                href={social.href}
+                key={social.label}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${social.label} Rya Bakery`}
+              >
+                {iconBySocial[social.label]}
+              </a>
+            ) : (
+              <span
+                aria-label={`${social.label} Rya Bakery non verificato`}
+                aria-disabled="true"
+                className="social-links__disabled"
+                role="img"
+                key={social.label}
+                title={`${social.label} non verificato online`}
+              >
+                {iconBySocial[social.label]}
+              </span>
+            )
+          ))}
         </div>
       </section>
     </main>
