@@ -51,6 +51,10 @@ export function getProduct(slug) {
   return request(`/products/${slug}`)
 }
 
+export function getOrder(slug) {
+  return request(`/orders/${slug}`)
+}
+
 export function createOrder(payload) {
   return request('/orders', {
     method: 'POST',

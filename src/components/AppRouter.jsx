@@ -6,6 +6,7 @@ import ConfirmationPage from '../pages/ConfirmationPage'
 import InfoPage from '../pages/InfoPage'
 import HomePage from '../pages/HomePage'
 import NotFoundPage from '../pages/NotFoundPage'
+import OrdersPage from '../pages/OrdersPage'
 import ProductDetailPage from '../pages/ProductDetailPage'
 import ProductsPage from '../pages/ProductsPage'
 
@@ -17,6 +18,7 @@ function PageTitle() {
       '/': 'Rya Bakery | Home',
       '/prodotti': 'Rya Bakery | Prodotti',
       '/carrello': 'Rya Bakery | Carrello',
+      '/ordini': 'Rya Bakery | Ordini',
       '/checkout': 'Rya Bakery | Checkout',
       '/conferma-ordine': 'Rya Bakery | Conferma ordine',
       '/informazioni': 'Rya Bakery | Informazioni',
@@ -42,6 +44,7 @@ function AppRouter() {
         <Route path="/prodotti" element={<ProductsPage />} />
         <Route path="/prodotti/:slug" element={<ProductDetailPage />} />
         <Route path="/carrello" element={<CartPage />} />
+        <Route path="/ordini" element={<OrdersPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/conferma-ordine" element={<ConfirmationPage />} />
         <Route path="/contatti" element={<Navigate to="/informazioni" replace />} />

@@ -5,6 +5,7 @@ import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
+import { storeOrder } from '../data/orderStorage'
 
 function CheckoutPage() {
   const [customerName, setCustomerName] = useState('')
@@ -39,6 +40,7 @@ function CheckoutPage() {
       })
 
       clearCart()
+      storeOrder(data.order)
       navigate('/conferma-ordine', { state: { order: data.order } })
     } catch (error) {
       reportError(error.message || 'Ordine non inviato.', error.status)

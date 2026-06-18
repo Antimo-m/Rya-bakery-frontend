@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Link as RouterLink } from 'react-router-dom'
+import { FiArchive, FiShoppingBag } from 'react-icons/fi'
 import logo from '../assets/rya-logo.svg'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
@@ -8,14 +9,28 @@ import { isOpenNow } from '../data/brand'
 
 function SiteLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [compactNav, setCompactNav] = useState(true)
   const { count } = useCart()
   const { error, clearError } = useError()
   const { toast } = useToast()
   const open = isOpenNow()
 
+  useEffect(() => {
+    const updateNavMode = () => {
+      const compact = window.innerWidth <= 900
+      setCompactNav(compact)
+      if (!compact) setMenuOpen(false)
+    }
+
+    updateNavMode()
+    window.addEventListener('resize', updateNavMode)
+
+    return () => window.removeEventListener('resize', updateNavMode)
+  }, [])
+
   return (
     <div className="site-shell">
-      <header className="site-header">
+      <header className={`site-header ${compactNav ? 'is-compact' : ''}`}>
         <div className="brand-stack">
           <RouterLink className="brand-link" to="/">
             <img src={logo} alt="" />
@@ -48,9 +63,17 @@ function SiteLayout({ children }) {
         >
           <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
           <NavLink to="/prodotti" onClick={() => setMenuOpen(false)}>Prodotti</NavLink>
-          <NavLink to="/carrello" onClick={() => setMenuOpen(false)}>Carrello {count > 0 ? `(${count})` : ''}</NavLink>
           <NavLink to="/informazioni" onClick={() => setMenuOpen(false)}>Informazioni</NavLink>
         </nav>
+        <div className="site-actions" aria-label="Azioni cliente">
+          <RouterLink className="site-icon-link" to="/ordini" aria-label="I tuoi ordini">
+            <FiArchive aria-hidden="true" />
+          </RouterLink>
+          <RouterLink className="site-icon-link" to="/carrello" aria-label={`Carrello con ${count} prodotti`}>
+            <FiShoppingBag aria-hidden="true" />
+            {count > 0 && <span>{count}</span>}
+          </RouterLink>
+        </div>
       </header>
 
       {error && (
