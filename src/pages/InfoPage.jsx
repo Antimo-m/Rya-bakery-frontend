@@ -1,9 +1,10 @@
 import { FaFacebookF, FaInstagram, FaPhoneAlt, FaTiktok } from 'react-icons/fa'
-import { MdAccessTime, MdEmail, MdPlace } from 'react-icons/md'
+import { MdAccessTime, MdDirections, MdEmail, MdPlace } from 'react-icons/md'
 import { isOpenNow, openingHours, socialLinks } from '../data/brand'
 
 function InfoPage() {
   const open = isOpenNow()
+  const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Via%20Timavo%2059%2C%20Genova'
   const iconBySocial = {
     Instagram: <FaInstagram aria-hidden="true" />,
     Facebook: <FaFacebookF aria-hidden="true" />,
@@ -24,18 +25,23 @@ function InfoPage() {
         <div className="info-layout">
           <div className="map-panel" aria-label="Mappa posizione Rya Bakery">
             <div className="custom-map">
-              <span className="map-road map-road-a"></span>
-              <span className="map-road map-road-b"></span>
-              <span className="map-road map-road-c"></span>
-              <span className="map-block map-block-a"></span>
-              <span className="map-block map-block-b"></span>
-              <span className="map-block map-block-c"></span>
+              <iframe
+                className="map-frame"
+                title="Mappa Rya Bakery & Cafe - Via Timavo 59, Genova"
+                src="https://maps.google.com/maps?q=Via%20Timavo%2059%2C%20Genova&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+              <span className="map-pin" aria-hidden="true"><i></i></span>
               <div className="map-card">
                 <span className={`map-status ${open ? 'is-open' : 'is-closed'}`}>{open ? 'Aperto ora' : 'Chiuso ora'}</span>
                 <strong>Rya Bakery & Cafe</strong>
-                <small>Via Timavo, Genova</small>
+                <small>Via Timavo 59, Genova</small>
+                <a href={mapsUrl} target="_blank" rel="noreferrer">
+                  <MdDirections aria-hidden="true" />
+                  Indicazioni
+                </a>
               </div>
-              <span className="map-pin"><i></i></span>
             </div>
           </div>
 

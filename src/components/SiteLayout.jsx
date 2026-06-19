@@ -44,18 +44,6 @@ function SiteLayout({ children }) {
             Via Timavo, Genova · {open ? 'Aperto ora' : 'Chiuso ora'}
           </span>
         </div>
-        <button
-          aria-controls="primary-navigation"
-          aria-expanded={menuOpen}
-          aria-label={menuOpen ? 'Chiudi menu' : 'Apri menu'}
-          className={`menu-toggle ${menuOpen ? 'is-open' : ''}`}
-          type="button"
-          onClick={() => setMenuOpen((current) => !current)}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
         <nav
           aria-label="Navigazione principale"
           className={`site-nav ${menuOpen ? 'is-open' : ''}`}
@@ -73,6 +61,18 @@ function SiteLayout({ children }) {
             <FiShoppingBag aria-hidden="true" />
             {count > 0 && <span>{count}</span>}
           </RouterLink>
+          <button
+            aria-controls="primary-navigation"
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? 'Chiudi menu' : 'Apri menu'}
+            className={`menu-toggle ${menuOpen ? 'is-open' : ''}`}
+            type="button"
+            onClick={() => setMenuOpen((current) => !current)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
       </header>
 
