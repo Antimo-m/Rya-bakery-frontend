@@ -16,19 +16,10 @@ export const openingHours = [
 
 export const socialLinks = [
   {
-    label: 'Instagram',
-    href: '',
-    verified: false,
-  },
-  {
-    label: 'Facebook',
-    href: '',
-    verified: false,
-  },
-  {
-    label: 'TikTok',
-    href: '',
-    verified: false,
+    label: 'Google Maps',
+    href: 'https://www.google.com/maps/search/?api=1&query=Via%20Timavo%2059%2C%20Genova',
+    verified: true,
+    color: 'maps',
   },
 ]
 

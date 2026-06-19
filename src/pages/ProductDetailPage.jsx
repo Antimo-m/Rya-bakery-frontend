@@ -76,8 +76,9 @@ function ProductDetailPage() {
               type="button"
               disabled={!product.is_available}
               onClick={() => {
-                addProduct(product)
-                notify('success', `${product.name} aggiunto al carrello.`)
+                if (addProduct(product)) {
+                  notify('success', `${product.name} aggiunto al carrello.`)
+                }
               }}
             >
               {product.is_available ? 'Aggiungi al carrello' : 'Non disponibile oggi'}

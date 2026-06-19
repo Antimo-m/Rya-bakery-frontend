@@ -1,4 +1,4 @@
-import { FaFacebookF, FaInstagram, FaPhoneAlt, FaTiktok } from 'react-icons/fa'
+import { FaPhoneAlt } from 'react-icons/fa'
 import { MdAccessTime, MdDirections, MdEmail, MdPlace } from 'react-icons/md'
 import { isOpenNow, openingHours, socialLinks } from '../data/brand'
 
@@ -6,9 +6,7 @@ function InfoPage() {
   const open = isOpenNow()
   const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Via%20Timavo%2059%2C%20Genova'
   const iconBySocial = {
-    Instagram: <FaInstagram aria-hidden="true" />,
-    Facebook: <FaFacebookF aria-hidden="true" />,
-    TikTok: <FaTiktok aria-hidden="true" />,
+    'Google Maps': <MdPlace aria-hidden="true" />,
   }
 
   return (
@@ -99,6 +97,7 @@ function InfoPage() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`${social.label} Rya Bakery`}
+                className={social.color ? `is-${social.color}` : ''}
               >
                 {iconBySocial[social.label]}
               </a>
@@ -106,7 +105,7 @@ function InfoPage() {
               <span
                 aria-label={`${social.label} Rya Bakery non verificato`}
                 aria-disabled="true"
-                className="social-links__disabled"
+                className={`social-links__disabled ${social.color ? `is-${social.color}` : ''}`}
                 role="img"
                 key={social.label}
                 title={`${social.label} non verificato online`}

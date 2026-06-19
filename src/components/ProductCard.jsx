@@ -6,7 +6,7 @@ import { useToast } from '../context/useToast'
 
 function ProductCard({ product }) {
   const price = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(product.price)
-  const { cartItems, addProduct, setQuantity, maxProductQuantity } = useCart()
+  const { cartItems, addProduct, setQuantity, maxProductQuantity, maxProductMessage } = useCart()
   const { notify } = useToast()
   const cartLine = cartItems.find((item) => item.product.slug === product.slug)
   const isAtLimit = cartLine?.quantity >= maxProductQuantity
@@ -52,7 +52,8 @@ function ProductCard({ product }) {
             <button
               aria-label={`Aumenta quantita di ${product.name}`}
               type="button"
-              disabled={isAtLimit}
+              aria-disabled={isAtLimit}
+              title={isAtLimit ? maxProductMessage : `Aumenta quantita di ${product.name}`}
               onClick={() => setQuantity(product.slug, cartLine.quantity + 1)}
             >
               <FiPlus aria-hidden="true" />
@@ -66,8 +67,9 @@ function ProductCard({ product }) {
             disabled={!product.is_available}
             aria-label={`Aggiungi ${product.name} al carrello`}
             onClick={() => {
-              addProduct(product)
-              notify('success', `${product.name} aggiunto al carrello.`)
+              if (addProduct(product)) {
+                notify('success', `${product.name} aggiunto al carrello.`)
+              }
             }}
           >
             <FiShoppingBag aria-hidden="true" />

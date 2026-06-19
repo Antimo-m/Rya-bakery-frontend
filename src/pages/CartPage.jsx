@@ -4,7 +4,7 @@ import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 
 function CartPage() {
-  const { cartItems, total, euro, maxProductQuantity, removeProduct, setQuantity } = useCart()
+  const { cartItems, total, euro, maxProductQuantity, maxProductMessage, removeProduct, setQuantity } = useCart()
   const titleRef = useRef(null)
   const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
@@ -67,7 +67,8 @@ function CartPage() {
                   <button
                     aria-label={`Aumenta quantita di ${item.product.name}`}
                     type="button"
-                    disabled={item.quantity >= maxProductQuantity}
+                    aria-disabled={item.quantity >= maxProductQuantity}
+                    title={item.quantity >= maxProductQuantity ? maxProductMessage : `Aumenta quantita di ${item.product.name}`}
                     onClick={() => setQuantity(item.product.slug, item.quantity + 1)}
                   >
                     <FiPlus aria-hidden="true" />
@@ -101,7 +102,7 @@ function CartPage() {
               </div>
             </dl>
             <Link className="btn" to="/checkout">Procedi all ordine</Link>
-            <Link className="btn secondary" to="/prodotti">Continua scelta</Link>
+            <Link className="btn cart-continue" to="/prodotti">Continua scelta</Link>
           </aside>
         </section>
       )}

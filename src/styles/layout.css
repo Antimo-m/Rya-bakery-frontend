@@ -300,10 +300,25 @@
   margin-top: 6px;
 }
 
-.site-footer__socials span {
-  padding: 7px 10px;
+.site-footer__socials a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
   border: 1px solid rgba(255, 250, 242, .16);
-  border-radius: 999px;
+  border-radius: 50%;
+  color: #fffaf2;
+  text-decoration: none;
+  transition: transform .18s var(--ease-out), background-color .18s var(--ease-out);
+}
+
+.site-footer__socials a:hover {
+  transform: translateY(-2px);
+}
+
+.site-footer__socials svg {
+  width: 20px;
+  height: 20px;
 }
 
 .page-header {

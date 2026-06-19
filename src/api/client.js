@@ -88,6 +88,13 @@ export function getProducts(params = {}) {
   }))
 }
 
+export function getMostOrderedProducts(params = {}) {
+  return request(buildPath('/products/most-ordered', params)).then((data) => ({
+    ...data,
+    products: normalizeProducts(data.products || []),
+  }))
+}
+
 export function getProduct(slug) {
   return request(`/products/${slug}`).then((data) => ({
     ...data,

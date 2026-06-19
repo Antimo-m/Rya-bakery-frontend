@@ -6,7 +6,7 @@
   color: #fffaf5;
   background:
     linear-gradient(180deg, rgba(38, 25, 21, .18), rgba(38, 25, 21, .82)),
-    url('../assets/products/cornetto-crema.jpg') center/cover;
+    url('../assets/products/cornetto-crema.jpg') center 48% / cover;
 }
 
 .hero-page > div {
@@ -710,6 +710,14 @@
   border-bottom: 1px solid var(--line);
 }
 
+.cart-continue {
+  background: linear-gradient(135deg, var(--emerald), #123d34);
+}
+
+.cart-continue:hover {
+  background: linear-gradient(135deg, #123d34, var(--emerald));
+}
+
 .cart-summary__meta dt {
   color: var(--muted);
   font-weight: 850;
@@ -948,6 +956,18 @@
   background: var(--accent);
 }
 
+.social-links a.is-maps,
+.site-footer__socials a.is-maps {
+  color: #fff;
+  background: #4285f4;
+  border-color: rgba(66, 133, 244, .28);
+}
+
+.social-links a.is-maps:hover,
+.site-footer__socials a.is-maps:hover {
+  background: #34a853;
+}
+
 .social-links__disabled {
   cursor: not-allowed;
   opacity: .42;
@@ -1085,6 +1105,13 @@
 }
 
 @media (max-width: 520px) {
+  .hero-page {
+    min-height: calc(74vh - 72px);
+    align-items: flex-end;
+    background-position: 56% 44%;
+    background-size: auto 112%;
+  }
+
   .hero-page h1 {
     max-width: 8ch;
     font-size: 54px;

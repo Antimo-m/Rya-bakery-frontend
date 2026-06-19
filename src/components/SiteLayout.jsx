@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link as RouterLink } from 'react-router-dom'
 import { FiArchive, FiShoppingBag } from 'react-icons/fi'
+import { MdPlace } from 'react-icons/md'
 import logo from '../assets/RyaBakery.png'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
@@ -14,6 +15,9 @@ function SiteLayout({ children }) {
   const { error, clearError } = useError()
   const { toast } = useToast()
   const open = isOpenNow()
+  const iconBySocial = {
+    'Google Maps': <MdPlace aria-hidden="true" />,
+  }
 
   useEffect(() => {
     const updateNavMode = () => {
@@ -109,7 +113,16 @@ function SiteLayout({ children }) {
           <strong>{openingHours[0].hours}</strong>
           <div className="site-footer__socials">
             {socialLinks.map((social) => (
-              <span key={social.label}>{social.label}</span>
+              <a
+                aria-label={`${social.label} Rya Bakery`}
+                className={social.color ? `is-${social.color}` : ''}
+                href={social.href}
+                key={social.label}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {iconBySocial[social.label]}
+              </a>
             ))}
           </div>
         </div>

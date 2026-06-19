@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getProducts, normalizeProducts } from '../api/client'
+import { getMostOrderedProducts, getProducts, normalizeProducts } from '../api/client'
 import Link from '../components/Link'
 import ProductCarousel from '../components/ProductCarousel'
 import { useCart } from '../context/useCart'
@@ -12,8 +12,16 @@ function HomePage() {
   const { euro } = useCart()
 
   useEffect(() => {
-    getProducts({ page: 1, per_page: 10 })
-      .then((data) => setProducts((data.products || []).slice(0, 10)))
+    getMostOrderedProducts({ limit: 10 })
+      .then((data) => {
+        if ((data.products || []).length > 0) {
+          setProducts(data.products)
+          return
+        }
+
+        return getProducts({ page: 1, per_page: 10 })
+          .then((fallbackData) => setProducts((fallbackData.products || []).slice(0, 10)))
+      })
       .catch(() => {
         setProducts(normalizeProducts(fallbackProducts))
       })
