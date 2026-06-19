@@ -1,5 +1,6 @@
 import { FiMinus, FiPlus, FiShoppingBag } from 'react-icons/fi'
 import Link from './Link'
+import ProductBadges from './ProductBadges'
 import { useCart } from '../context/useCart'
 import { useToast } from '../context/useToast'
 
@@ -19,6 +20,7 @@ function ProductCard({ product }) {
       >
         <img src={product.image_url} alt="" loading="lazy" />
         <div className="product-card__body">
+          <ProductBadges badges={product.badges} compact />
           <span>{product.category || 'Bakery'}</span>
           <h3>{product.name}</h3>
           <p>{product.description}</p>
@@ -69,7 +71,7 @@ function ProductCard({ product }) {
             }}
           >
             <FiShoppingBag aria-hidden="true" />
-            Carrello
+            Aggiungi
           </button>
         )}
       </div>

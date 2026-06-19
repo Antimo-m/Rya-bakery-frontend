@@ -19,12 +19,12 @@ function CartPage() {
           <p className="eyebrow">Carrello</p>
           <h1 ref={titleRef} tabIndex="-1">Il tuo carrello</h1>
         </div>
-        <p>Controlla quantita e totale prima di inviare l ordine al banco.</p>
       </header>
+      <p>Rivedi le tue scelte prima di mandarle al banco.</p>
 
       {cartItems.length === 0 ? (
         <section className="empty-panel">
-          <p>Il carrello e vuoto.</p>
+          <p>Il carrello e vuoto, ma il banco ha qualcosa di buono per te.</p>
           <Link className="btn" to="/prodotti">Scegli prodotti</Link>
         </section>
       ) : (

@@ -61,6 +61,7 @@ export function normalizeProduct(product) {
   return {
     ...product,
     image_url: normalizeImageUrl(product.image_url || product.cover_url || product.photo_url),
+    badges: product.badges || [],
   }
 }
 

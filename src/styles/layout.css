@@ -327,13 +327,14 @@
 .page-header h1,
 .hero-page h1 {
   margin: 0;
-  color: var(--ink);
+  color: var(--title-color);
   letter-spacing: 0;
 }
 
 .page-header h1 {
-  font-size: clamp(34px, 7vw, 56px);
-  line-height: 1;
+  font-family: var(--display-heading);
+  font-size: var(--title-size-lg);
+  line-height: 1.08;
 }
 
 .eyebrow {

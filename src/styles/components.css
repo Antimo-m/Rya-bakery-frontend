@@ -221,6 +221,57 @@
   padding: 15px 15px 8px;
 }
 
+.product-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 2px;
+}
+
+.product-badges.compact {
+  gap: 6px;
+}
+
+.product-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  padding: 6px 9px;
+  border: 1px solid rgba(124, 74, 47, .12);
+  border-radius: 999px;
+  background: rgba(255, 250, 242, .86);
+  color: var(--espresso);
+  font-size: 11px;
+  font-weight: 950;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: 0 8px 18px rgba(58, 37, 29, .06);
+}
+
+.product-badge svg {
+  width: 13px;
+  height: 13px;
+}
+
+.product-badge.best_seller {
+  color: #7b4a13;
+  background: #fff0cf;
+  border-color: rgba(240, 188, 115, .36);
+}
+
+.product-badge.new {
+  color: #17405c;
+  background: #e0f0ff;
+  border-color: rgba(23, 64, 92, .12);
+}
+
+.product-badge.freshly_baked {
+  color: #14523e;
+  background: #dff4e9;
+  border-color: rgba(20, 82, 62, .12);
+}
+
 .product-card__body h3 {
   min-height: 2.2em;
   margin: 0;

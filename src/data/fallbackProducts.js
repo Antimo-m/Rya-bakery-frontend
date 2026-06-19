@@ -7,6 +7,7 @@ export const fallbackProducts = [
     price: 2.8,
     image_url: null,
     is_available: true,
+    badges: [{ type: 'freshly_baked', label: 'Appena sfornato' }],
   },
   {
     name: 'Cappuccino Rya',
@@ -16,6 +17,7 @@ export const fallbackProducts = [
     price: 2.2,
     image_url: null,
     is_available: true,
+    badges: [{ type: 'best_seller', label: 'Best Seller' }],
   },
   {
     name: 'Focaccia farcita',
@@ -25,6 +27,7 @@ export const fallbackProducts = [
     price: 5.5,
     image_url: null,
     is_available: true,
+    badges: [],
   },
   {
     name: 'Mini pastry box',
@@ -34,6 +37,7 @@ export const fallbackProducts = [
     price: 7.5,
     image_url: null,
     is_available: true,
+    badges: [{ type: 'new', label: 'Novita' }],
   },
   {
     name: 'Toast emerald',
@@ -43,6 +47,7 @@ export const fallbackProducts = [
     price: 6,
     image_url: null,
     is_available: true,
+    badges: [],
   },
   {
     name: 'Spremuta fresca',
@@ -52,5 +57,6 @@ export const fallbackProducts = [
     price: 3.8,
     image_url: null,
     is_available: true,
+    badges: [],
   },
 ]

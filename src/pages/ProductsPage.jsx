@@ -47,10 +47,10 @@ function ProductsPage() {
     <main className="page">
       <header className="page-header order-header">
         <div>
-          <p className="eyebrow">Prodotti dal tavolo</p>
-          <h1>Prodotti</h1>
+          <p className="eyebrow">Banco del giorno</p>
+          <h1>Scegli dal banco</h1>
         </div>
-        <p>Scegli cosa desideri, aggiungi al carrello e conferma con nome e numero tavolo.</p>
+        <p>Dolci, caffetteria e proposte salate preparate per accompagnare il tuo momento da Rya.</p>
       </header>
 
       <div className="category-tabs">
@@ -84,11 +84,11 @@ function ProductsPage() {
           ))}
         </section>
       ) : currentProducts.length === 0 ? (
-        <p className="empty-state">Nessun prodotto disponibile in questa selezione.</p>
+        <p className="empty-state">Per questa selezione il banco si sta preparando. Prova un altra categoria.</p>
       ) : (
         <>
           <div className="catalog-meta">
-            <span>{totalProducts} prodotti disponibili</span>
+            <span>{totalProducts} specialita disponibili</span>
             <strong>Pagina {page} / {totalPages}</strong>
           </div>
           <section className="product-grid" aria-label="Catalogo prodotti">

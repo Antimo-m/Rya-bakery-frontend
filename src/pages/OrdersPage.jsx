@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getOrder } from '../api/client'
 import Link from '../components/Link'
-import { getStoredOrders } from '../data/orderStorage'
+import { getStoredOrders, storeOrder } from '../data/orderStorage'
+import echo from '../lib/echo'
 
 const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
 const dateFormatter = new Intl.DateTimeFormat('it-IT', { dateStyle: 'medium', timeStyle: 'short' })
@@ -14,6 +15,7 @@ function getProgress(status) {
 
 function OrdersPage() {
   const [orders, setOrders] = useState(() => getStoredOrders())
+  const orderSlugKey = useMemo(() => orders.map((order) => order.slug).filter(Boolean).join('|'), [orders])
 
   useEffect(() => {
     let active = true
@@ -27,6 +29,7 @@ function OrdersPage() {
           .filter(Boolean)
 
         setOrders(refreshed)
+        refreshed.forEach(storeOrder)
       })
 
     return () => {
@@ -34,20 +37,41 @@ function OrdersPage() {
     }
   }, [])
 
+  useEffect(() => {
+    const orderSlugs = orderSlugKey ? orderSlugKey.split('|') : []
+
+    orderSlugs.forEach((slug) => {
+      echo.channel(`orders.${slug}`).listen('.order.status.updated', (event) => {
+        setOrders((currentOrders) => currentOrders.map((order) => {
+          if (order.slug !== event.order?.slug) return order
+
+          const updatedOrder = { ...order, ...event.order }
+          storeOrder(updatedOrder)
+
+          return updatedOrder
+        }))
+      })
+    })
+
+    return () => {
+      orderSlugs.forEach((slug) => echo.leave(`orders.${slug}`))
+    }
+  }, [orderSlugKey])
+
   return (
     <main className="page orders-page">
       <header className="page-header">
         <div>
-          <p className="eyebrow">I tuoi ordini</p>
-          <h1>Ordini</h1>
+          <p className="eyebrow">Dal banco al tavolo</p>
+          <h1>I tuoi ordini</h1>
         </div>
-        <p>Consulta gli ordini inviati da questo dispositivo e controlla lo stato aggiornato dal banco.</p>
       </header>
+      <p>Segui la preparazione in tempo reale: ti avvisiamo quando il tuo ordine e pronto.</p>
 
       {orders.length === 0 ? (
         <section className="empty-panel">
-          <p>Non hai ancora inviato ordini da questo dispositivo.</p>
-          <Link className="btn" to="/prodotti">Scegli prodotti</Link>
+          <p>Non hai ancora ordinato da questo dispositivo. Il banco e pronto quando vuoi.</p>
+          <Link className="btn" to="/prodotti">Scegli dal banco</Link>
         </section>
       ) : (
         <section className="orders-list" aria-label="Ordini effettuati">
@@ -64,7 +88,7 @@ function OrdersPage() {
               <div className="order-progress" style={{ '--progress': getProgress(order.status) }}>
                 <span>Ricevuto</span>
                 <span>In preparazione</span>
-                <span>Consegnato</span>
+                <span>Pronto</span>
               </div>
               <ul>
                 {order.items?.map((item) => (

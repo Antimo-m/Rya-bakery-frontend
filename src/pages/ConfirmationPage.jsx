@@ -12,7 +12,7 @@ function ConfirmationPage() {
       <section className="confirmation-card">
         <p className="eyebrow">Ordine inviato</p>
         <h1>Grazie, {order?.customer_name || 'cliente'}</h1>
-        <p>Lo staff ha ricevuto il tuo ordine e lo gestira il prima possibile.</p>
+        <p>Il banco ha ricevuto tutto: puoi seguire la preparazione dalla pagina ordini.</p>
 
         {order && (
           <dl className="order-recap">
@@ -23,7 +23,7 @@ function ConfirmationPage() {
           </dl>
         )}
 
-        <Link className="btn" to="/prodotti">Nuovo ordine</Link>
+        <Link className="btn" to="/prodotti">Ordina ancora</Link>
       </section>
     </main>
   )

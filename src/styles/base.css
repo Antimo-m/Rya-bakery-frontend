@@ -21,6 +21,12 @@
   --red: #a63c34;
   --yellow: #f0bc73;
   --heading: "Fraunces", "Georgia", "Times New Roman", serif;
+  --display-heading: "Lora", "Georgia", "Times New Roman", serif;
+  --title-color: #8f5b34;
+  --title-color-strong: #714326;
+  --title-size-lg: clamp(34px, 4.8vw, 50px);
+  --title-size-md: clamp(30px, 4.2vw, 44px);
+  --title-size-sm: clamp(28px, 3.5vw, 38px);
   --shadow: 0 22px 70px rgba(58, 37, 29, .13);
   --soft-shadow: 0 12px 34px rgba(58, 37, 29, .08);
   --radius-sm: 10px;
@@ -75,6 +81,6 @@ button:disabled {
 h1,
 h2,
 h3 {
-  font-family: var(--heading);
-  font-weight: 650;
+  font-family: var(--display-heading);
+  font-weight: 700;
 }

@@ -21,7 +21,7 @@ function CheckoutPage() {
     event.preventDefault()
 
     if (cartItems.length === 0) {
-      notify('error', 'Aggiungi almeno un prodotto prima di inviare l ordine.')
+      notify('error', 'Scegli almeno una specialita dal banco prima di inviare l ordine.')
       navigate('/prodotti')
       return
     }
@@ -54,34 +54,34 @@ function CheckoutPage() {
     <main className="page checkout-layout">
       <form className="checkout-form" onSubmit={submitOrder}>
         <header className="page-header compact">
-          <p className="eyebrow">Checkout</p>
-          <h1>Conferma ordine</h1>
+          <p className="eyebrow">Ultimo controllo</p>
+          <h1>Conferma il tuo ordine</h1>
         </header>
 
         <label>
           Nome cliente
-          <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} required maxLength="80" placeholder="Es. Naomi" />
+          <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} required maxLength="80" placeholder="Il nome per chiamarti al banco" />
         </label>
 
         <label>
           Numero tavolo
-          <input value={tableNumber} onChange={(event) => setTableNumber(event.target.value)} required type="number" min="1" max="999" placeholder="Es. 4" />
+          <input value={tableNumber} onChange={(event) => setTableNumber(event.target.value)} required type="number" min="1" max="999" placeholder="Il tuo tavolo" />
         </label>
 
         <label>
           Note
-          <textarea value={notes} onChange={(event) => setNotes(event.target.value)} maxLength="500" rows="4" placeholder="Allergie o preferenze" />
+          <textarea value={notes} onChange={(event) => setNotes(event.target.value)} maxLength="500" rows="4" placeholder="Allergie, preferenze o una nota per il banco" />
         </label>
 
         <button className="btn" type="submit" disabled={sending}>
-          {sending ? 'Invio ordine...' : 'Invia ordine'}
+          {sending ? 'Stiamo inviando al banco...' : 'Invia al banco'}
         </button>
       </form>
 
       <aside className="checkout-summary">
         <h2>Riepilogo</h2>
         {cartItems.length === 0 ? (
-          <p>Il carrello e vuoto.</p>
+          <p>Il carrello e ancora vuoto.</p>
         ) : (
           cartItems.map((item) => (
             <div className="summary-line" key={item.product.slug}>

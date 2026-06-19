@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getProduct, normalizeProduct } from '../api/client'
 import Link from '../components/Link'
+import ProductBadges from '../components/ProductBadges'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
@@ -45,7 +46,7 @@ function ProductDetailPage() {
   }, [notify, reportError, slug])
 
   if (loading) {
-    return <main className="page"><p className="empty-state">Caricamento prodotto...</p></main>
+    return <main className="page"><p className="empty-state">Stiamo preparando la scheda prodotto...</p></main>
   }
 
   if (notFound || !product) {
@@ -53,8 +54,8 @@ function ProductDetailPage() {
       <main className="page error-page">
         <p className="eyebrow">Prodotto non disponibile</p>
         <h1>Non abbiamo trovato questo prodotto</h1>
-        <p className="empty-state">Prodotto non trovato.</p>
-        <Link className="btn secondary" to="/prodotti">Torna ai prodotti</Link>
+        <p className="empty-state">Questo prodotto non e disponibile al banco digitale.</p>
+        <Link className="btn secondary" to="/prodotti">Torna al banco</Link>
       </main>
     )
   }
@@ -65,6 +66,7 @@ function ProductDetailPage() {
         <img src={product.image_url} alt="" loading="lazy" />
         <div>
           <p className="eyebrow">{product.category}</p>
+          <ProductBadges badges={product.badges} />
           <h1>{product.name}</h1>
           <p>{product.description}</p>
           <strong>{euro.format(product.price)}</strong>
@@ -78,9 +80,9 @@ function ProductDetailPage() {
                 notify('success', `${product.name} aggiunto al carrello.`)
               }}
             >
-              {product.is_available ? 'Aggiungi al carrello' : 'Non disponibile'}
+              {product.is_available ? 'Aggiungi al carrello' : 'Non disponibile oggi'}
             </button>
-            <Link className="btn secondary" to="/prodotti">Torna ai prodotti</Link>
+            <Link className="btn secondary" to="/prodotti">Torna al banco</Link>
           </div>
         </div>
       </article>
