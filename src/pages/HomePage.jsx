@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getProducts } from '../api/client'
+import { getProducts, normalizeProducts } from '../api/client'
 import Link from '../components/Link'
 import ProductCarousel from '../components/ProductCarousel'
 import { useCart } from '../context/useCart'
@@ -15,7 +15,7 @@ function HomePage() {
     getProducts({ page: 1, per_page: 10 })
       .then((data) => setProducts((data.products || []).slice(0, 10)))
       .catch(() => {
-        setProducts(fallbackProducts)
+        setProducts(normalizeProducts(fallbackProducts))
       })
   }, [])
 
@@ -46,8 +46,8 @@ function HomePage() {
       <section className="visual-showcase" aria-labelledby="showcase-title">
         <div className="showcase-copy">
           <p className="eyebrow">Bakery & Cafe</p>
-          <h2 id="showcase-title">Un banco caldo, digitale, curato nei dettagli.</h2>
-          <p>Una selezione che alterna dolce, salato e caffetteria con un ritmo visivo pensato per far respirare il brand.</p>
+          <h2 id="showcase-title">Qui troverai alcuni spunti provenienti dal nostro banco</h2>
+          <p>Una selezione che alterna dolce e salato, tutto a tua disposizione</p>
           <div className="showcase-tabs" aria-label="Prodotti in evidenza">
             {showcaseItems.map((item, index) => (
               <button
@@ -77,7 +77,7 @@ function HomePage() {
         <div className="section-heading">
           <div>
             <p className="eyebrow">Il banco digitale</p>
-            <h2 id="digital-counter-title">Scorri i prodotti piu richiesti.</h2>
+            <h2 id="digital-counter-title">Scopri i prodotti piu richiesti.</h2>
           </div>
         </div>
         <ProductCarousel products={products} euro={euro} />

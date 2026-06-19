@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link as RouterLink } from 'react-router-dom'
 import { FiArchive, FiShoppingBag } from 'react-icons/fi'
-import logo from '../assets/rya-logo.svg'
+import logo from '../assets/RyaBakery.png'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
@@ -9,7 +9,7 @@ import { isOpenNow, openingHours, socialLinks } from '../data/brand'
 
 function SiteLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [compactNav, setCompactNav] = useState(true)
+  const [compactNav, setCompactNav] = useState(() => window.innerWidth <= 900)
   const { count } = useCart()
   const { error, clearError } = useError()
   const { toast } = useToast()
@@ -96,7 +96,7 @@ function SiteLayout({ children }) {
               <small>Bakery & Cafe</small>
             </span>
           </RouterLink>
-          <p>Bakery digitale per colazioni, pausa pranzo e ordini al tavolo in Via Timavo.</p>
+          <p>Bakery & cafè a dispozione per voi per colazioni, pausa pranzo e aperitivi in Via Timavo 59.</p>
         </div>
         <nav aria-label="Link utili footer">
           <RouterLink to="/prodotti">Prodotti</RouterLink>

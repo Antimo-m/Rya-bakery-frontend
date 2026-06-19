@@ -5,6 +5,12 @@ import { getStoredOrders } from '../data/orderStorage'
 
 const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
 const dateFormatter = new Intl.DateTimeFormat('it-IT', { dateStyle: 'medium', timeStyle: 'short' })
+const orderSteps = ['received', 'pending', 'delivered']
+
+function getProgress(status) {
+  const index = orderSteps.indexOf(status)
+  return index === -1 ? 1 : index + 1
+}
 
 function OrdersPage() {
   const [orders, setOrders] = useState(() => getStoredOrders())
@@ -47,22 +53,33 @@ function OrdersPage() {
         <section className="orders-list" aria-label="Ordini effettuati">
           {orders.map((order) => (
             <article className="order-card" key={order.slug}>
-              <div>
-                <span className={`order-status ${order.status}`}>{order.status_label}</span>
-                <h2>{order.customer_name}</h2>
-                <p>Tavolo {order.table_number} · {order.created_at ? dateFormatter.format(new Date(order.created_at)) : order.slug}</p>
+              <div className="order-card__header">
+                <div>
+                  <span className={`order-status ${order.status}`}>{order.status_label}</span>
+                  <h2>Ordine {order.slug}</h2>
+                  <p>{order.created_at ? dateFormatter.format(new Date(order.created_at)) : order.customer_name}</p>
+                </div>
+                <strong>{euro.format(order.total_price)}</strong>
+              </div>
+              <div className="order-progress" style={{ '--progress': getProgress(order.status) }}>
+                <span>Ricevuto</span>
+                <span>In preparazione</span>
+                <span>Consegnato</span>
               </div>
               <ul>
                 {order.items?.map((item) => (
                   <li key={`${order.slug}-${item.product_slug}`}>
-                    <span>{item.quantity}x {item.product_name}</span>
+                    <span className="order-product">
+                      {item.product_image_url && <img src={item.product_image_url} alt="" loading="lazy" />}
+                      <span>{item.quantity}x {item.product_name}</span>
+                    </span>
                     <strong>{euro.format(item.line_total)}</strong>
                   </li>
                 ))}
               </ul>
               <footer>
-                <span>Totale</span>
-                <strong>{euro.format(order.total_price)}</strong>
+                <span>Tavolo {order.table_number}</span>
+                <Link to="/prodotti">Ordina ancora</Link>
               </footer>
             </article>
           ))}

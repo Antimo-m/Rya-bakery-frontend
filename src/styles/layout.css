@@ -1,15 +1,21 @@
 .site-shell {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-shell > main {
+  flex: 1;
 }
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(230px, 1fr) auto minmax(120px, 1fr);
   align-items: center;
-  justify-content: center;
-  gap: clamp(18px, 5vw, 80px);
+  gap: clamp(16px, 4vw, 48px);
   padding: 12px clamp(16px, 4vw, 38px);
   border-bottom: 1px solid rgba(124, 74, 47, .14);
   background: rgba(251, 246, 238, .86);
@@ -67,6 +73,7 @@
 .brand-stack {
   display: grid;
   gap: 4px;
+  justify-self: start;
   min-width: 0;
 }
 
@@ -136,6 +143,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  justify-self: center;
   gap: 6px;
   padding: 6px;
   border: 1px solid rgba(124, 74, 47, .16);
@@ -165,6 +173,7 @@
 .site-actions {
   display: flex;
   align-items: center;
+  justify-self: end;
   gap: 9px;
 }
 
@@ -242,16 +251,16 @@
 }
 
 .site-footer {
-  width: min(1180px, calc(100% - 32px));
+  width: 100%;
   display: grid;
-  grid-template-columns: 1.35fr .8fr 1fr;
+  grid-template-columns: minmax(260px, 1.35fr) minmax(160px, .8fr) minmax(220px, 1fr);
   gap: 28px;
-  margin: 28px auto 0;
-  padding: clamp(24px, 5vw, 42px);
-  border: 1px solid rgba(124, 74, 47, .15);
-  border-radius: var(--radius-xl);
+  margin: auto 0 0;
+  padding: clamp(30px, 5vw, 56px) max(16px, calc((100vw - 1180px) / 2 + 16px));
+  border-top: 1px solid rgba(124, 74, 47, .15);
   color: #f7ecdf;
   background:
+    radial-gradient(circle at 10% 0%, rgba(240, 188, 115, .20), transparent 28%),
     linear-gradient(135deg, rgba(15, 107, 88, .22), transparent 45%),
     var(--espresso);
   box-shadow: var(--shadow);
@@ -338,11 +347,16 @@
 @media (max-width: 900px) {
   .site-header,
   .site-header.is-compact {
+    display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
     gap: 12px;
     padding: 12px 16px;
+  }
+
+  .site-footer {
+    grid-template-columns: 1fr;
   }
 
   .brand-link img {
@@ -423,6 +437,7 @@
 }
 
 .site-header.is-compact {
+  display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;

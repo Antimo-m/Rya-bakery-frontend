@@ -1,17 +1,19 @@
 import { useEffect, useRef } from 'react'
+import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi'
 import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 
 function CartPage() {
   const { cartItems, total, euro, maxProductQuantity, removeProduct, setQuantity } = useCart()
   const titleRef = useRef(null)
+  const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   useEffect(() => {
     titleRef.current?.focus()
   }, [])
 
   return (
-    <main className="page">
+    <main className="page cart-page-shell">
       <header className="page-header">
         <div>
           <p className="eyebrow">Carrello</p>
@@ -28,6 +30,10 @@ function CartPage() {
       ) : (
         <section className="cart-page" aria-label="Riepilogo carrello">
           <div className="cart-list">
+            <div className="cart-list__head">
+              <span>{itemCount} prodotti selezionati</span>
+              <strong>{euro.format(total)}</strong>
+            </div>
             {cartItems.map((item) => (
               <article className="cart-line" key={item.product.slug}>
                 <img className="cart-line__image" src={item.product.image_url} alt="" />
@@ -36,13 +42,6 @@ function CartPage() {
                     <h2>{item.product.name}</h2>
                     <span>{euro.format(item.product.price)} cad.</span>
                   </div>
-                  <button
-                    className="cart-remove"
-                    type="button"
-                    onClick={() => removeProduct(item.product.slug)}
-                  >
-                    Rimuovi
-                  </button>
                 </div>
                 <div className="quantity-control">
                   <button
@@ -50,7 +49,7 @@ function CartPage() {
                     type="button"
                     onClick={() => setQuantity(item.product.slug, item.quantity - 1)}
                   >
-                    ‹
+                    <FiMinus aria-hidden="true" />
                   </button>
                   <input
                     aria-label={`Quantita ${item.product.name}`}
@@ -71,17 +70,38 @@ function CartPage() {
                     disabled={item.quantity >= maxProductQuantity}
                     onClick={() => setQuantity(item.product.slug, item.quantity + 1)}
                   >
-                    ›
+                    <FiPlus aria-hidden="true" />
                   </button>
                 </div>
-                <strong className="cart-line__total">{euro.format(item.lineTotal)}</strong>
+                <div className="cart-line__aside">
+                  <strong className="cart-line__total">{euro.format(item.lineTotal)}</strong>
+                  <button
+                    className="cart-remove"
+                    type="button"
+                    aria-label={`Rimuovi ${item.product.name}`}
+                    onClick={() => removeProduct(item.product.slug)}
+                  >
+                    <FiTrash2 aria-hidden="true" />
+                  </button>
+                </div>
               </article>
             ))}
           </div>
           <aside className="cart-summary" aria-label="Totale carrello">
-            <span>Totale</span>
+            <span>Riepilogo ordine</span>
             <strong>{euro.format(total)}</strong>
+            <dl className="cart-summary__meta">
+              <div>
+                <dt>Prodotti</dt>
+                <dd>{itemCount}</dd>
+              </div>
+              <div>
+                <dt>Servizio</dt>
+                <dd>Al tavolo</dd>
+              </div>
+            </dl>
             <Link className="btn" to="/checkout">Procedi all ordine</Link>
+            <Link className="btn secondary" to="/prodotti">Continua scelta</Link>
           </aside>
         </section>
       )}

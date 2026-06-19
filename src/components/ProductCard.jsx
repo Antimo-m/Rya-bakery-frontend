@@ -1,3 +1,4 @@
+import { FiMinus, FiPlus, FiShoppingBag } from 'react-icons/fi'
 import Link from './Link'
 import { useCart } from '../context/useCart'
 import { useToast } from '../context/useToast'
@@ -7,6 +8,7 @@ function ProductCard({ product }) {
   const { cartItems, addProduct, setQuantity, maxProductQuantity } = useCart()
   const { notify } = useToast()
   const cartLine = cartItems.find((item) => item.product.slug === product.slug)
+  const isAtLimit = cartLine?.quantity >= maxProductQuantity
 
   return (
     <article className={`product-card ${!product.is_available ? 'is-disabled' : ''}`}>
@@ -32,7 +34,7 @@ function ProductCard({ product }) {
               type="button"
               onClick={() => setQuantity(product.slug, cartLine.quantity - 1)}
             >
-              ‹
+              <FiMinus aria-hidden="true" />
             </button>
             <input
               aria-label={`Quantita ${product.name}`}
@@ -48,11 +50,12 @@ function ProductCard({ product }) {
             <button
               aria-label={`Aumenta quantita di ${product.name}`}
               type="button"
-              disabled={cartLine.quantity >= maxProductQuantity}
+              disabled={isAtLimit}
               onClick={() => setQuantity(product.slug, cartLine.quantity + 1)}
             >
-              ›
+              <FiPlus aria-hidden="true" />
             </button>
+            <span aria-live="polite">{cartLine.quantity} nel carrello</span>
           </div>
         ) : (
           <button
@@ -65,7 +68,7 @@ function ProductCard({ product }) {
               notify('success', `${product.name} aggiunto al carrello.`)
             }}
           >
-            <span aria-hidden="true">+</span>
+            <FiShoppingBag aria-hidden="true" />
             Carrello
           </button>
         )}

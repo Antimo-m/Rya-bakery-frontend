@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getProduct } from '../api/client'
+import { getProduct, normalizeProduct } from '../api/client'
 import Link from '../components/Link'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
@@ -33,7 +33,7 @@ function ProductDetailPage() {
         const fallbackProduct = fallbackProducts.find((item) => item.slug === slug)
 
         if (fallbackProduct) {
-          setProduct(fallbackProduct)
+          setProduct(normalizeProduct(fallbackProduct))
           setNotFound(false)
           return
         }

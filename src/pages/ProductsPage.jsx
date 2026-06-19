@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getProducts } from '../api/client'
+import { getProducts, normalizeProducts } from '../api/client'
 import ProductCard from '../components/ProductCard'
 import { fallbackProducts } from '../data/fallbackProducts'
 
@@ -26,7 +26,7 @@ function ProductsPage() {
         setServerMeta(data.meta || null)
       })
       .catch(() => {
-        setProducts(fallbackProducts)
+        setProducts(normalizeProducts(fallbackProducts))
         setCategories(['Tutto', ...new Set(fallbackProducts.map((product) => product.category))])
         setServerMeta(null)
       })

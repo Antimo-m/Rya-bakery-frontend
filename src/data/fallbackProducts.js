@@ -1,9 +1,3 @@
-import cappuccinoImage from '../assets/products/cappuccino-rya.jpg'
-import cornettoImage from '../assets/products/cornetto-crema.jpg'
-import focacciaImage from '../assets/products/focaccia-farcita.jpg'
-import pastryBoxImage from '../assets/products/pastry-box.jpg'
-import spremutaImage from '../assets/products/spremuta-fresca.jpg'
-
 export const fallbackProducts = [
   {
     name: 'Cornetto crema',
@@ -11,7 +5,7 @@ export const fallbackProducts = [
     category: 'Dolce',
     description: 'Sfoglia dorata con crema morbida, pensata per una colazione lenta.',
     price: 2.8,
-    image_url: cornettoImage,
+    image_url: null,
     is_available: true,
   },
   {
@@ -20,7 +14,7 @@ export const fallbackProducts = [
     category: 'Caffetteria',
     description: 'Espresso intenso, latte montato fine e una finitura vellutata.',
     price: 2.2,
-    image_url: cappuccinoImage,
+    image_url: null,
     is_available: true,
   },
   {
@@ -29,7 +23,7 @@ export const fallbackProducts = [
     category: 'Salato',
     description: 'Impasto soffice, farcitura fresca e taglio generoso da pausa pranzo.',
     price: 5.5,
-    image_url: focacciaImage,
+    image_url: null,
     is_available: true,
   },
   {
@@ -38,7 +32,7 @@ export const fallbackProducts = [
     category: 'Pasticceria',
     description: 'Piccola selezione dolce dal banco, elegante e facile da condividere.',
     price: 7.5,
-    image_url: pastryBoxImage,
+    image_url: null,
     is_available: true,
   },
   {
@@ -47,7 +41,7 @@ export const fallbackProducts = [
     category: 'Salato',
     description: 'Pane caldo, ingredienti essenziali e servizio rapido al tavolo.',
     price: 6,
-    image_url: focacciaImage,
+    image_url: null,
     is_available: true,
   },
   {
@@ -56,7 +50,7 @@ export const fallbackProducts = [
     category: 'Bevande',
     description: 'Agrumi freschi e note luminose per accompagnare il banco bakery.',
     price: 3.8,
-    image_url: spremutaImage,
+    image_url: null,
     is_available: true,
   },
 ]

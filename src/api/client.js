@@ -1,5 +1,7 @@
-const BACKEND_URL = (import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000').replace(/\/$/, '')
-const API_URL = BACKEND_URL.endsWith('/api') ? BACKEND_URL : `${BACKEND_URL}/api`
+const configuredBackendUrl = (import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000').replace(/\/$/, '')
+const BACKEND_URL = configuredBackendUrl.endsWith('/api') ? configuredBackendUrl.slice(0, -4) : configuredBackendUrl
+const API_URL = configuredBackendUrl.endsWith('/api') ? configuredBackendUrl : `${configuredBackendUrl}/api`
+const PRODUCT_PLACEHOLDER_URL = `${BACKEND_URL}/images/rya-product-placeholder.svg`
 
 function buildPath(path, params = {}) {
   const search = new URLSearchParams()
@@ -43,21 +45,68 @@ async function request(path, options = {}) {
   }
 }
 
+function normalizeImageUrl(imageUrl) {
+  if (!imageUrl) return PRODUCT_PLACEHOLDER_URL
+
+  try {
+    return new URL(imageUrl, BACKEND_URL).toString()
+  } catch {
+    return PRODUCT_PLACEHOLDER_URL
+  }
+}
+
+export function normalizeProduct(product) {
+  if (!product) return product
+
+  return {
+    ...product,
+    image_url: normalizeImageUrl(product.image_url || product.cover_url || product.photo_url),
+  }
+}
+
+export function normalizeProducts(products = []) {
+  return products.map(normalizeProduct)
+}
+
+function normalizeOrder(order) {
+  if (!order) return order
+
+  return {
+    ...order,
+    items: (order.items || []).map((item) => ({
+      ...item,
+      product_image_url: normalizeImageUrl(item.product_image_url || item.image_url),
+    })),
+  }
+}
+
 export function getProducts(params = {}) {
-  return request(buildPath('/products', params))
+  return request(buildPath('/products', params)).then((data) => ({
+    ...data,
+    products: normalizeProducts(data.products || []),
+  }))
 }
 
 export function getProduct(slug) {
-  return request(`/products/${slug}`)
+  return request(`/products/${slug}`).then((data) => ({
+    ...data,
+    product: normalizeProduct(data.product),
+  }))
 }
 
 export function getOrder(slug) {
-  return request(`/orders/${slug}`)
+  return request(`/orders/${slug}`).then((data) => ({
+    ...data,
+    order: normalizeOrder(data.order),
+  }))
 }
 
 export function createOrder(payload) {
   return request('/orders', {
     method: 'POST',
     body: JSON.stringify(payload),
-  })
+  }).then((data) => ({
+    ...data,
+    order: normalizeOrder(data.order),
+  }))
 }
