@@ -28,6 +28,7 @@
   z-index: 22;
   width: 46px;
   height: 46px;
+  padding: 0;
   border: 1px solid rgba(124, 74, 47, .16);
   border-radius: 50%;
   background: rgba(255, 250, 242, .88);
@@ -36,29 +37,31 @@
 
 .menu-toggle span {
   position: absolute;
-  left: 13px;
+  top: 50%;
+  left: 50%;
   width: 18px;
   height: 2px;
   border-radius: 999px;
   background: var(--espresso);
-  transition: transform .22s var(--ease-out), opacity .22s var(--ease-out), top .22s var(--ease-out);
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  transition: transform .22s var(--ease-out), opacity .22s var(--ease-out);
 }
 
 .menu-toggle span:nth-child(1) {
-  top: 15px;
+  transform: translate(-50%, calc(-50% - 7px));
 }
 
 .menu-toggle span:nth-child(2) {
-  top: 22px;
+  transform: translate(-50%, -50%);
 }
 
 .menu-toggle span:nth-child(3) {
-  top: 29px;
+  transform: translate(-50%, calc(-50% + 7px));
 }
 
 .menu-toggle.is-open span:nth-child(1) {
-  top: 22px;
-  transform: rotate(45deg);
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .menu-toggle.is-open span:nth-child(2) {
@@ -66,8 +69,7 @@
 }
 
 .menu-toggle.is-open span:nth-child(3) {
-  top: 22px;
-  transform: rotate(-45deg);
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .brand-stack {
@@ -137,6 +139,29 @@
 .nav-live-badge.is-closed .live-dot {
   background: var(--red);
   box-shadow: 0 0 0 4px rgba(166, 60, 52, .12);
+}
+
+.closing-notice {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px clamp(16px, 4vw, 38px);
+  border-bottom: 1px solid rgba(183, 95, 50, .18);
+  color: #6f3f24;
+  background: linear-gradient(90deg, #fff1d5, #fff8e9);
+  font-size: 13px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.closing-notice svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  color: var(--bronze-dark);
 }
 
 .site-nav {
@@ -563,6 +588,14 @@
 }
 
 @media (max-width: 520px) {
+  .closing-notice {
+    align-items: flex-start;
+    padding-block: 9px;
+    font-size: 12px;
+    line-height: 1.35;
+    text-align: left;
+  }
+
   .site-header,
   .site-header.is-compact {
     gap: 10px;
@@ -570,11 +603,12 @@
   }
 
   .brand-stack {
-    gap: 0;
+    gap: 4px;
   }
 
   .nav-live-badge {
-    display: none;
+    display: inline-flex;
+    max-width: min(210px, calc(100vw - 160px));
   }
 
   .site-actions,
@@ -591,6 +625,6 @@
   }
 
   .menu-toggle span {
-    left: 11px;
+    width: 17px;
   }
 }

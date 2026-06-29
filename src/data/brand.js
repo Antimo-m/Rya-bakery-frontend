@@ -46,14 +46,22 @@ export const showcaseItems = [
   },
   {
     title: 'Pausa emerald',
-    subtitle: 'Un momento curato dal tavolo al banco',
+    subtitle: 'Ordina dal tavolo, ritira al banco',
     image: spremutaImage,
   },
 ]
 
-export function isOpenNow(date = new Date()) {
-  const day = date.getDay()
-  const schedule = [
+const STORE_TIME_ZONE = 'Europe/Rome'
+const WEEKDAY_INDEX = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+}
+const weeklySchedule = [
     ['08:00', '13:00'],
     ['07:00', '19:30'],
     ['07:00', '19:30'],
@@ -61,13 +69,45 @@ export function isOpenNow(date = new Date()) {
     ['07:00', '19:30'],
     ['07:00', '19:30'],
     ['08:00', '19:30'],
-  ][day]
+  ]
 
-  const minutes = date.getHours() * 60 + date.getMinutes()
+function storeDateParts(date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: STORE_TIME_ZONE,
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date)
+  const values = Object.fromEntries(parts.map(({ type, value }) => [type, value]))
+
+  return {
+    day: WEEKDAY_INDEX[values.weekday],
+    hour: Number(values.hour),
+    minute: Number(values.minute),
+  }
+}
+
+export function getStoreStatus(date = new Date()) {
+  const { day, hour, minute } = storeDateParts(date)
+  const schedule = weeklySchedule[day]
+
+  const minutes = hour * 60 + minute
   const [openHour, openMinute] = schedule[0].split(':').map(Number)
   const [closeHour, closeMinute] = schedule[1].split(':').map(Number)
   const openMinutes = openHour * 60 + openMinute
   const closeMinutes = closeHour * 60 + closeMinute
+  const open = minutes >= openMinutes && minutes < closeMinutes
+  const minutesUntilClose = open ? closeMinutes - minutes : null
 
-  return minutes >= openMinutes && minutes < closeMinutes
+  return {
+    open,
+    closingSoon: open && minutesUntilClose <= 30,
+    minutesUntilClose,
+    closesAt: schedule[1],
+  }
+}
+
+export function isOpenNow(date = new Date()) {
+  return getStoreStatus(date).open
 }

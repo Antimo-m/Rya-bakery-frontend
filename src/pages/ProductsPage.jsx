@@ -5,6 +5,7 @@ import { fallbackProducts } from '../data/fallbackProducts'
 
 const PER_PAGE = 10
 const SKELETON_CARDS = Array.from({ length: 6 }, (_, index) => index)
+const availableFirst = (left, right) => Number(right.is_available) - Number(left.is_available)
 
 function ProductsPage() {
   const [products, setProducts] = useState([])
@@ -33,9 +34,13 @@ function ProductsPage() {
       .finally(() => setLoading(false))
   }, [category, page])
 
-  const filteredProducts = useMemo(() => (
-    category === 'Tutto' ? products : products.filter((product) => product.category === category)
-  ), [category, products])
+  const filteredProducts = useMemo(() => {
+    const categoryProducts = category === 'Tutto'
+      ? products
+      : products.filter((product) => product.category === category)
+
+    return [...categoryProducts].sort(availableFirst)
+  }, [category, products])
 
   const totalProducts = serverMeta?.total ?? filteredProducts.length
   const totalPages = Math.max(1, serverMeta?.last_page ?? Math.ceil(totalProducts / PER_PAGE))
@@ -88,7 +93,7 @@ function ProductsPage() {
       ) : (
         <>
           <div className="catalog-meta">
-            <span>{totalProducts} specialita disponibili</span>
+            <span>{totalProducts} specialità a catalogo</span>
             <strong>Pagina {page} / {totalPages}</strong>
           </div>
           <section className="product-grid" aria-label="Catalogo prodotti">

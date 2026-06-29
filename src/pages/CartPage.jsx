@@ -98,7 +98,7 @@ function CartPage() {
               </div>
               <div>
                 <dt>Servizio</dt>
-                <dd>Al tavolo</dd>
+                <dd>Ritiro al banco</dd>
               </div>
             </dl>
             <Link className="btn" to="/checkout">Procedi all ordine</Link>

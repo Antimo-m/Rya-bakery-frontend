@@ -9,7 +9,7 @@ function PrivacyPage() {
         <p>Informativa sintetica per gli ordini digitali Rya Bakery.</p>
       </header>
       <section className="privacy-panel">
-        <p>I dati inseriti per l ordine vengono usati esclusivamente per preparare e gestire il servizio al tavolo.</p>
+        <p>I dati inseriti vengono usati esclusivamente per preparare l ordine, identificarlo e gestirne il ritiro al banco.</p>
         <p>Gli ordini salvati nella sezione cliente restano sul dispositivo usato e possono essere cancellati svuotando i dati del browser.</p>
       </section>
     </main>

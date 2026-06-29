@@ -64,7 +64,7 @@ function CheckoutPage() {
         </label>
 
         <label>
-          Numero tavolo
+          Numero tavolo <small>Usato solo come riferimento per il banco</small>
           <input value={tableNumber} onChange={(event) => setTableNumber(event.target.value)} required type="number" min="1" max="999" placeholder="Il tuo tavolo" />
         </label>
 
@@ -80,6 +80,7 @@ function CheckoutPage() {
 
       <aside className="checkout-summary">
         <h2>Riepilogo</h2>
+        <p className="pickup-note">Dopo la preparazione ritirerai l ordine al banco.</p>
         {cartItems.length === 0 ? (
           <p>Il carrello e ancora vuoto.</p>
         ) : (

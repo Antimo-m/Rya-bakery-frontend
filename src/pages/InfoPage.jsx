@@ -1,9 +1,9 @@
 import { FaPhoneAlt } from 'react-icons/fa'
 import { MdAccessTime, MdDirections, MdEmail, MdPlace } from 'react-icons/md'
-import { isOpenNow, openingHours, socialLinks } from '../data/brand'
+import { getStoreStatus, openingHours, socialLinks } from '../data/brand'
 
 function InfoPage() {
-  const open = isOpenNow()
+  const { open } = getStoreStatus()
   const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Via%20Timavo%2059%2C%20Genova'
   const iconBySocial = {
     'Google Maps': <MdPlace aria-hidden="true" />,
@@ -17,7 +17,7 @@ function InfoPage() {
             <p className="eyebrow">Informazioni</p>
             <h1>Rya Bakery, Via Timavo</h1>
           </div>
-          <p>Un punto caldo e pratico per colazione, pausa pranzo e bakery da gustare al tavolo.</p>
+          <p>Un punto caldo e pratico per colazione e pausa pranzo: ordina dal tavolo e ritira al banco.</p>
         </div>
 
         <div className="info-layout">

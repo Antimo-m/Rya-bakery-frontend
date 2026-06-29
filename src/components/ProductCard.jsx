@@ -65,7 +65,7 @@ function ProductCard({ product }) {
             className="product-card__cart"
             type="button"
             disabled={!product.is_available}
-            aria-label={`Aggiungi ${product.name} al carrello`}
+            aria-label={product.is_available ? `Aggiungi ${product.name} al carrello` : `${product.name} non disponibile`}
             onClick={() => {
               if (addProduct(product)) {
                 notify('success', `${product.name} aggiunto al carrello.`)
@@ -73,7 +73,7 @@ function ProductCard({ product }) {
             }}
           >
             <FiShoppingBag aria-hidden="true" />
-            Aggiungi
+            {product.is_available ? 'Aggiungi' : 'Non disponibile'}
           </button>
         )}
       </div>

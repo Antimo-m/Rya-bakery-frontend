@@ -43,7 +43,7 @@ export const fallbackProducts = [
     name: 'Toast emerald',
     slug: 'toast-emerald',
     category: 'Salato',
-    description: 'Pane caldo, ingredienti essenziali e servizio rapido al tavolo.',
+    description: 'Pane caldo, ingredienti essenziali e ritiro rapido al banco.',
     price: 6,
     image_url: null,
     is_available: true,
