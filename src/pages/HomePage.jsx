@@ -43,7 +43,7 @@ function HomePage() {
         <div>
           <p className="eyebrow">Bar e bakery in Via Timavo</p>
           <h1>Rya Bakery</h1>
-          <p>Consulta il catalogo, aggiungi prodotti al carrello e invia il tuo ordine direttamente dal tavolo.</p>
+          <p>Ordina comodamente dal tavolo, segui la preparazione e ritira tutto al banco quando ricevi l avviso.</p>
           <div className="hero-actions">
             <Link className="btn" to="/prodotti">Vai ai prodotti</Link>
             <Link className="btn secondary light" to="/carrello">Apri carrello</Link>

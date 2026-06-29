@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link as RouterLink } from 'react-router-dom'
-import { FiArchive, FiShoppingBag } from 'react-icons/fi'
+import { FiArchive, FiClock, FiShoppingBag } from 'react-icons/fi'
 import { MdPlace } from 'react-icons/md'
 import logo from '../assets/RyaBakery.png'
 import { useCart } from '../context/useCart'
 import { useError } from '../context/useError'
 import { useToast } from '../context/useToast'
-import { isOpenNow, openingHours, socialLinks } from '../data/brand'
+import { getStoreStatus, openingHours, socialLinks } from '../data/brand'
 
 function SiteLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [compactNav, setCompactNav] = useState(() => window.innerWidth <= 900)
+  const [storeStatus, setStoreStatus] = useState(() => getStoreStatus())
   const { count } = useCart()
   const { error, clearError } = useError()
   const { toast } = useToast()
-  const open = isOpenNow()
+  const { open, closingSoon, minutesUntilClose, closesAt } = storeStatus
   const iconBySocial = {
     'Google Maps': <MdPlace aria-hidden="true" />,
   }
@@ -30,6 +31,12 @@ function SiteLayout({ children }) {
     window.addEventListener('resize', updateNavMode)
 
     return () => window.removeEventListener('resize', updateNavMode)
+  }, [])
+
+  useEffect(() => {
+    const interval = window.setInterval(() => setStoreStatus(getStoreStatus()), 60_000)
+
+    return () => window.clearInterval(interval)
   }, [])
 
   return (
@@ -79,6 +86,16 @@ function SiteLayout({ children }) {
           </button>
         </div>
       </header>
+
+      {closingSoon && (
+        <div className="closing-notice" role="status">
+          <FiClock aria-hidden="true" />
+          <span>
+            Il negozio chiude alle {closesAt}: mancano circa {minutesUntilClose} minuti.
+            Se vuoi ordinare, questo è il momento giusto.
+          </span>
+        </div>
+      )}
 
       {error && (
         <div className="app-error" role="status">

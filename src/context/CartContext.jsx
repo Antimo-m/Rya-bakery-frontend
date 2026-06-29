@@ -73,6 +73,21 @@ export function CartProvider({ children }) {
     setItems({})
   }
 
+  function replaceCart(nextItems) {
+    const normalizedItems = {}
+
+    nextItems.forEach(({ product, quantity }) => {
+      if (!product?.slug || !product?.is_available) return
+
+      const normalizedQuantity = Math.min(Math.max(Math.floor(Number(quantity) || 1), 1), MAX_PRODUCT_QUANTITY)
+      normalizedItems[product.slug] = { product, quantity: normalizedQuantity }
+    })
+
+    setItems(normalizedItems)
+
+    return Object.keys(normalizedItems).length > 0
+  }
+
   const cartItems = useMemo(() => Object.values(items).map((item) => ({
     ...item,
     lineTotal: item.product.price * item.quantity,
@@ -82,7 +97,7 @@ export function CartProvider({ children }) {
   const count = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ cartItems, count, total, euro, maxProductQuantity: MAX_PRODUCT_QUANTITY, maxProductMessage: MAX_PRODUCT_MESSAGE, addProduct, setQuantity, removeProduct, clearCart }}>
+    <CartContext.Provider value={{ cartItems, count, total, euro, maxProductQuantity: MAX_PRODUCT_QUANTITY, maxProductMessage: MAX_PRODUCT_MESSAGE, addProduct, setQuantity, removeProduct, clearCart, replaceCart }}>
       {children}
     </CartContext.Provider>
   )

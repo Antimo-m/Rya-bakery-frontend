@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { getOrder } from '../api/client'
 import Link from '../components/Link'
-import { getStoredOrders, storeOrder } from '../data/orderStorage'
+import { formatOrderReference, getRecentStoredOrders, mergeStoredOrders } from '../data/orderStorage'
 import echo from '../lib/echo'
+import { useToast } from '../context/useToast'
 
 const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' })
 const dateFormatter = new Intl.DateTimeFormat('it-IT', { dateStyle: 'medium', timeStyle: 'short' })
 const orderSteps = ['received', 'pending', 'delivered']
+const readyMessage = 'Il tuo ordine è pronto. Vieni a ritirarlo al banco. Grazie per averci scelto.'
 
 function getProgress(status) {
   const index = orderSteps.indexOf(status)
@@ -14,28 +16,45 @@ function getProgress(status) {
 }
 
 function OrdersPage() {
-  const [orders, setOrders] = useState(() => getStoredOrders())
+  const [orders, setOrders] = useState(() => getRecentStoredOrders())
+  const notifiedReadyOrders = useRef(new Set())
+  const { notify } = useToast()
   const orderSlugKey = useMemo(() => orders.map((order) => order.slug).filter(Boolean).join('|'), [orders])
 
   useEffect(() => {
     let active = true
 
-    Promise.allSettled(getStoredOrders().map((order) => getOrder(order.slug)))
-      .then((results) => {
-        if (!active) return
+    const refreshOrders = async () => {
+      const storedOrders = getRecentStoredOrders()
+      const results = await Promise.allSettled(storedOrders.map((order) => getOrder(order.slug)))
 
-        const refreshed = results
-          .map((result, index) => (result.status === 'fulfilled' ? result.value.order : getStoredOrders()[index]))
-          .filter(Boolean)
+      if (!active) return
 
-        setOrders(refreshed)
-        refreshed.forEach(storeOrder)
+      const refreshed = results
+        .map((result, index) => (result.status === 'fulfilled' ? result.value.order : storedOrders[index]))
+        .filter(Boolean)
+
+      mergeStoredOrders(refreshed)
+      setOrders((currentOrders) => {
+        refreshed.forEach((order) => {
+          const previous = currentOrders.find((item) => item.slug === order.slug)
+          if (order.status === 'delivered' && previous?.status !== 'delivered' && !notifiedReadyOrders.current.has(order.slug)) {
+            notifiedReadyOrders.current.add(order.slug)
+            notify('success', order.pickup_message || readyMessage)
+          }
+        })
+        return getRecentStoredOrders()
       })
+    }
+
+    refreshOrders()
+    const interval = window.setInterval(refreshOrders, 15_000)
 
     return () => {
       active = false
+      window.clearInterval(interval)
     }
-  }, [])
+  }, [notify])
 
   useEffect(() => {
     const orderSlugs = orderSlugKey ? orderSlugKey.split('|') : []
@@ -46,7 +65,12 @@ function OrdersPage() {
           if (order.slug !== event.order?.slug) return order
 
           const updatedOrder = { ...order, ...event.order }
-          storeOrder(updatedOrder)
+          mergeStoredOrders([updatedOrder])
+
+          if (updatedOrder.status === 'delivered' && order.status !== 'delivered' && !notifiedReadyOrders.current.has(order.slug)) {
+            notifiedReadyOrders.current.add(order.slug)
+            notify('success', updatedOrder.pickup_message || readyMessage)
+          }
 
           return updatedOrder
         }))
@@ -56,21 +80,24 @@ function OrdersPage() {
     return () => {
       orderSlugs.forEach((slug) => echo.leave(`orders.${slug}`))
     }
-  }, [orderSlugKey])
+  }, [notify, orderSlugKey])
 
   return (
     <main className="page orders-page">
       <header className="page-header">
         <div>
-          <p className="eyebrow">Dal banco al tavolo</p>
+          <p className="eyebrow">Ritiro al banco</p>
           <h1>I tuoi ordini</h1>
         </div>
       </header>
-      <p>Segui la preparazione in tempo reale: ti avvisiamo quando il tuo ordine e pronto.</p>
+      <div className="orders-page__intro">
+        <p>Segui la preparazione in tempo reale: quando l ordine è pronto, vieni a ritirarlo al banco.</p>
+        <Link className="btn secondary" to="/ordini/storico">Storico ordini</Link>
+      </div>
 
       {orders.length === 0 ? (
         <section className="empty-panel">
-          <p>Non hai ancora ordinato da questo dispositivo. Il banco e pronto quando vuoi.</p>
+          <p>Non hai ordini recenti su questo dispositivo. Puoi consultarli nello storico o scegliere dal banco.</p>
           <Link className="btn" to="/prodotti">Scegli dal banco</Link>
         </section>
       ) : (
@@ -80,7 +107,7 @@ function OrdersPage() {
               <div className="order-card__header">
                 <div>
                   <span className={`order-status ${order.status}`}>{order.status_label}</span>
-                  <h2>Ordine {order.slug}</h2>
+                  <h2>{formatOrderReference(order)}</h2>
                   <p>{order.created_at ? dateFormatter.format(new Date(order.created_at)) : order.customer_name}</p>
                 </div>
                 <strong>{euro.format(order.total_price)}</strong>
@@ -90,6 +117,12 @@ function OrdersPage() {
                 <span>In preparazione</span>
                 <span>Pronto</span>
               </div>
+              {order.status === 'delivered' && (
+                <div className="order-ready-notice" role="status">
+                  <strong>Il tuo ordine è pronto.</strong>
+                  <span>Vieni a ritirarlo al banco. Grazie per averci scelto.</span>
+                </div>
+              )}
               <ul>
                 {order.items?.map((item) => (
                   <li key={`${order.slug}-${item.product_slug}`}>
@@ -102,7 +135,7 @@ function OrdersPage() {
                 ))}
               </ul>
               <footer>
-                <span>Tavolo {order.table_number}</span>
+                <span>Tavolo {order.table_number} · riferimento ordine</span>
                 <Link to="/prodotti">Ordina ancora</Link>
               </footer>
             </article>
